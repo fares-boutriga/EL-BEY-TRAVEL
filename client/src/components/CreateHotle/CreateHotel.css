@@ -1,0 +1,83 @@
+/* Add a class for consistent styling of input fields */
+.page input,
+.page select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Style for buttons */
+.page button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 15px;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.page button:hover {
+  background-color: #0056b3;
+}
+
+/* Style for file input container */
+.file-input-container {
+  margin-bottom: 20px;
+}
+
+/* Add more styling to the custom file input button */
+.custom-file-input {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.custom-file-input:hover {
+  background-color: #0056b3;
+}
+
+/* Add shadows to the form container for depth */
+.createHotel {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  width: 80%;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 2%;
+  font-size: 18px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.page {
+	display: flex;
+	align-content: center;
+	justify-content: center;
+}
+@media only screen and (max-width: 600px) {
+	.page {
+	  flex-direction: column;
+	  align-items: center;
+	}
+  
+	.page input,
+	.page select {
+	  width: 100%;
+	  box-sizing: border-box;
+	}
+  
+	.createHotel {
+	  grid-template-columns: 1fr;
+	}
+  }

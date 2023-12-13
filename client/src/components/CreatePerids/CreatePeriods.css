@@ -1,0 +1,17 @@
+.createPeriode{
+    width: 80%;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    padding: 2%;
+    font-size: 18px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.onePeriode{
+display: flex;
+flex-direction:row;
+justify-content: space-around;
+border: 2px black solid;
+margin: 1%;
+border-radius: 5px;
+
+}
