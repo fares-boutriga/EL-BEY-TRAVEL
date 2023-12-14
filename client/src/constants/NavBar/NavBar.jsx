@@ -36,14 +36,14 @@ import AdbIcon from '@mui/icons-material/Adb';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 
 
 
 
+const pages = ['Reservations', 'Mes Hotels', 'Blog'];
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 function Navbar() {
@@ -54,19 +54,19 @@ function Navbar() {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  //this functins of the profile icon
+  //const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+  // const handleOpenUserMenu = (event) => {
+  //   setAnchorElUser(event.currentTarget);
+  // };
+  // const handleCloseUserMenu = () => {
+  //   setAnchorElUser(null);
+  // };
 
 
   const Search = styled('div')(({ theme }) => ({
@@ -112,10 +112,11 @@ function Navbar() {
     justifyContent: 'center',
   }));
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{marginBottom:'25px'}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          {/* this is the component of the logo of the big screen */}
           <Typography
             variant="h6"
             noWrap
@@ -131,8 +132,9 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            LOGO 
           </Typography>
+          {/* ****************** */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -170,7 +172,8 @@ function Navbar() {
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
+          {/* These is the components of the logo of the phone screen  */}
+          {/* <Typography
             variant="h5"
             noWrap
             component="a"
@@ -187,8 +190,8 @@ function Navbar() {
             }}
           >
             LOGO fff
-          </Typography>
-         
+          </Typography> */}
+         {/* *************** */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -209,8 +212,8 @@ function Navbar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-               
-          <Box sx={{ flexGrow: 0 }}>
+            
+          {/* <Box >
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
@@ -238,15 +241,27 @@ function Navbar() {
                 </MenuItem>
               ))}
             </Menu>
+          </Box> */}
+          <Box
+           variant="h6"
+           noWrap
+           component="a"
+           href="#app-bar-with-responsive-menu"
+           sx={{
+             mr: 2,
+             display: { xs: 'none', md: 'flex' },
+             fontFamily: 'monospace',
+             fontWeight: 700,
+             letterSpacing: '.3rem',
+             color: 'inherit',
+             textDecoration: 'none',
+           }}>
+            <Typography
+            style={{marginLeft:'10px'}}
+            >wellcom walid</Typography>
           </Box>
-          <Box>
-            <Typography>hello walid kii</Typography>
-          </Box>
-          <Box>
-            <Typography>Logout</Typography>
-          </Box>
+        <LogoutIcon/>
         </Toolbar>
-     
       </Container>
     </AppBar>
   );

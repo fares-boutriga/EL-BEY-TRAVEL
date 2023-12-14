@@ -28,6 +28,7 @@
 /* Style for file input container */
 .file-input-container {
   margin-bottom: 20px;
+  margin-right: 10px;
 }
 
 /* Add more styling to the custom file input button */
@@ -62,9 +63,13 @@
 }
 .page {
 	display: flex;
+  flex-wrap: wrap;
 	align-content: center;
 	justify-content: center;
 }
+.page div {
+	  margin-right: 30px;
+	}
 @media only screen and (max-width: 600px) {
 	.page {
 	  flex-direction: column;
@@ -81,3 +86,4 @@
 	  grid-template-columns: 1fr;
 	}
   }
+  
