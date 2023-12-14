@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './CreatePeriods.css';
 import OnePeriode from './OnePeriode';
+import { Link } from 'react-router-dom';
 
 function CreatePeriods() {
   const [NPeriode, setNPeriode] = useState(3);
@@ -30,6 +31,7 @@ function CreatePeriods() {
         </div>
         <div>
           {renderPeriodes()}
+          <Link to={'/'}><button>Return  </button></Link>
           <button>Suivant </button>
         </div>
       </div>
