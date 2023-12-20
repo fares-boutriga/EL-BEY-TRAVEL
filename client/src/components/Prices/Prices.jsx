@@ -1,54 +1,72 @@
-import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import React, {  useState } from 'react';
+import { useParams } from "react-router-dom";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+import './Prices.css';
 
-const rows = [
-  createData('Frozen yoghurt', 159, null, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+const Prices = () => {
+  const { NPeriode } = useParams();
+  const [periods, setPeriods] = useState([
+    { period: 'Logement simple' },
+    { period: 'Petit dej' },
+    { period: 'Demie pension' },
+    { period: 'Pension complète' },
+    { period: 'All-in soft (sans alcools)' },
+    { period: 'All-in' },
+    { period: 'supplément single' },
+    { period: 'Supplément vue sur mer' },
+    { period: 'Supplément suite' },
+    { period: 'Supplément Noel' },
+  ]);
 
-export default function Prices() {
+  const handleSubmit = () => {
+  console.log('done')
+  };
+
+  const generateRows = (number) => {
+    const rows = [];
+    for (let i = 0; i < number; i++) {
+      rows.push(<th key={i}>period {i + 1}</th>);
+    }
+    return rows;
+  };
+  
+
+  const generateColumns = (number) => {
+    const columns = [];
+    for (let i = 0; i < number; i++) {
+      columns.push(
+        <td key={i}>
+          <input
+            type="text"
+            onChange={(e) => console.log(e.target.value)}
+          />
+        </td>
+      );
+    }
+    return columns;
+  };
+
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
-            </TableRow>
+    <form onSubmit={handleSubmit}>
+      <table>
+        <thead>
+          <tr>
+            <th>Period</th>
+            {generateRows(NPeriode)}
+          </tr>
+        </thead>
+        <tbody>
+          {periods.map((item, index) => (
+            <tr key={index}>
+              <td>{item.period}</td>
+              {generateColumns(NPeriode)}
+            </tr>
           ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+        </tbody>
+      </table>
+      <button type="submit">Submit</button>
+    </form>
   );
-}
+};
+
+export default Prices;

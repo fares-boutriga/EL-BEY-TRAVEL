@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import './CreatePeriods.css';
 import OnePeriode from './OnePeriode';
 import { Link } from 'react-router-dom';
@@ -32,7 +32,7 @@ function CreatePeriods() {
         <div>
           {renderPeriodes()}
           <Link to={'/'}><button>Return  </button></Link>
-          <button>Suivant </button>
+          <Link to={`/Prices/${NPeriode}`}><button>Suivant </button></Link>
         </div>
       </div>
     </div>
