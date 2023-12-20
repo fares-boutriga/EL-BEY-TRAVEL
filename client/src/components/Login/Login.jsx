@@ -1,50 +1,127 @@
-import React from 'react';
-import './Login.css'
-function Login() {
-  return (
-    <div className="overlay">
-      <form>
-        <header className="head-form">
-          <h2>Log In</h2>
-          <p>connectez-vous ici en utilisant votre nom d'utilisateur et votre mot de passe</p>
-        </header>
-        <br />
-        <div className="field-set">
-          <span className="input-item">
-            <i className="fa fa-user-circle"></i>
-          </span>
-          <input
-            className="form-input"
-            id="txt-input"
-            type="text"
-            placeholder="nom d'utilisateur"
-            required
-          />
-          <br />
-          <span className="input-item">
-            <i className="fa fa-key"></i>
-          </span>
-          <input
-            className="form-input"
-            type="password"
-            placeholder="Mot de passe "
-            id="pwd"
-            name="password"
-            required
-          />
-     
-        
-        </div>
+import * as React from 'react';
+import { useState } from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios'
+import {useNaigate, useNavigate} from 'react-router-dom'
+// function Copyright(props) {
+//   return (
+//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
+//       {'Copyright © '}
+//       <Link color="inherit" href="https://mui.com/">
+//         Your Website
+//       </Link>{' '}
+//       {new Date().getFullYear()}
+//       {'.'}
+//     </Typography>
+//   );
+// }
 
-        <div className="other">
-          <button className="btn submits frgt-pass">Mot de passe oublié</button>
-          <button className="btn submits sign-up">
-            Log in <i className="fa fa-user-plus" aria-hidden="true"></i>
-          </button>
-        </div>
-      </form>
-    </div>
+// TODO remove, this demo shouldn't need to reset the theme.
+
+const defaultTheme = createTheme();
+
+export default function Login() {
+  const [username,setUsername]=useState("")
+  const [password,setPassword]=useState("")
+  const navigate=useNavigate()
+  const handleSubmit = async () => {
+    try {
+      const result = await axios.post('http://localhost:5000/app/admin/login', {
+        username: username,
+        password: password,
+      });
+      const access=result.data.comparePass
+      // console.log(result.data.comparePass); 
+     access ==="success"? navigate('/'):alert(access)
+       } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={username}
+              onChange={e=>{setUsername(e.target.value)}}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={e=>{setPassword(e.target.value)}}
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              // type="submit"
+              onClick={handleSubmit}
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
+      </Container>
+    </ThemeProvider>
   );
 }
-
-export default Login;

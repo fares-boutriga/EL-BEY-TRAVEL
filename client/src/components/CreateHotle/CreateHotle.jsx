@@ -33,10 +33,10 @@ const CreateHotel = () => {
         </div>
         <div className="hotel-categorie">
           <span>Categorie </span>
-          <select name="Categorie" class="ipt-select" required>
+          <select name="Categorie" className="ipt-select" required>
             <option
               label="Trois étoiles"
-              value="Trois étoiles"
+              defaultValue="Trois étoiles"
               selected="selected"
             >
               Trois étoiles

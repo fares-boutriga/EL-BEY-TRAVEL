@@ -7,14 +7,14 @@ import Login from './components/Login/Login';
 import NavBar from './constants/NavBar/NavBar';
 import Slideshow from './components/Slideshow/Slideshow';
 import Prices from './components/Prices/Prices';
-import OneHotel from './components/Hotels/OneHotel/OneHotel';
+import SignUp from './components/SignUp/SignUp';
 
 function App() {
   return (
 
       <>
       <Router>
-        <NavBar />
+        {/* <NavBar /> */}
         <Routes>
           <Route path="/" element={<CreateHotle />} />
           <Route path="/HotelDetails" element={<HotelDetails />} />
@@ -22,7 +22,7 @@ function App() {
           <Route path="/HotelDetails" element={<HotelDetails />} />
           <Route path="/Prices/:NPeriode" element={<Prices />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/one" element={<OneHotel />} />
+          <Route path="/signUp" element={<SignUp />} />
           <Route path="/Slideshow" element={<Slideshow />} />
           {/* <Route path="/register" element={<RegisterPage />} /> */} 
           
