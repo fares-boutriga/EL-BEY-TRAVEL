@@ -37,6 +37,7 @@ const Prices = () => {
       columns.push(
         <td key={i}>
           <input
+          id='price'
             type="text"
             onChange={(e) => console.log(e.target.value)}
           />

@@ -1,6 +1,5 @@
 const express =require('express')
 const cors =require('cors')
-// import { Jwt } from "jsonwebtoken";
 // import bcrypt from "bcrypt"
 const sequelize =require('./Database/configdb')
 const cookieParser = require('cookie-parser')

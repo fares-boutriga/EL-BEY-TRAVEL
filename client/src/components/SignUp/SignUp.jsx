@@ -1,25 +1,26 @@
-import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-// import Link from '@mui/material/Link';
+import Linke from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
+        <Linke>
         Your Website
+        </Linke>
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -32,13 +33,20 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const [username,setUsername]=useState("")
+  const [password,setPassword]=useState("")
+  const navigate=useNavigate()
+  const handleSubmit = async () => {
+    try {
+      const result = await axios.post('http://localhost:5000/app/admin/register', {
+        username: username,
+        passwordIn: password,
+      });
+        navigate('/login')
+       } catch (error) {
+        error.response.data.errors[0].message==='username must be unique'? alert("L'utilisateur existe déjà."):
+        console.log(error)
+    }
   };
 
   return (
@@ -70,11 +78,13 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  value={username}
+                  onChange={e=>{setUsername(e.target.value)}}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  required
+                  // required
                   fullWidth
                   id="lastName"
                   label="Last Name"
@@ -101,17 +111,15 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  value={password}
+                  onChange={e=>{setPassword(e.target.value)}}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
+
             </Grid>
             <Button
-              type="submit"
+              // type="submit"
+              onClick={handleSubmit}
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
@@ -122,7 +130,9 @@ export default function SignUp() {
               <Grid item>
                 
                 <Link to={'/login'}>
+                  <Linke>
                   Already have an account? Sign in
+                  </Linke>
                 </Link>
               </Grid>
             </Grid>
