@@ -15,6 +15,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios'
 import {useNavigate,Link} from 'react-router-dom'
+import Cookies from 'js-cookie';
+
 // function Copyright(props) {
 //   return (
 //     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -43,13 +45,24 @@ export default function Login() {
         username: username,
         password: password,
       });
-      const access=result.data.success
-      console.log('this is token',result.data.token); 
-     access? navigate('/'):alert(access)
-       } catch (error) {
-      console.error('Error FARES:', error);
+  
+      const success = result.data.success;
+  
+      if (success) {
+        const token = result.data.token;
+  
+        // Set the token in a cookie (you can customize the cookie options as needed)
+        Cookies.set('token', token);
+  
+        navigate('/');
+      } else {
+        console.log(result.data.message); // Assuming your server sends an error message
+      }
+    } catch (error) {
+      console.error('Error:', error);
     }
   };
+  
 
   return (
     <ThemeProvider theme={defaultTheme}>
