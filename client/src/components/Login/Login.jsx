@@ -15,6 +15,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios'
 import {useNavigate,Link} from 'react-router-dom'
+import Swal from 'sweetalert2';
+
 // function Copyright(props) {
 //   return (
 //     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -43,14 +45,28 @@ export default function Login() {
         username: username,
         password: password,
       });
-      const access=result.data.success
-      console.log('this is token',result.data.token); 
-     access? navigate('/'):alert(access)
-       } catch (error) {
-      console.error('Error FARES:', error);
+  
+      if (result.status === 200) {
+        console.log(result.status);
+        navigate('/');
+      } else if (result.status === 404) {
+        console.log(result.status);
+        alert("Access Denied");
+      } else {
+        console.log(result.status);
+        alert('Something went wrong');
+      }
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.message);
+        console.error('Error:', error.response.data.message);
+      } else {
+        alert('An unexpected error occurred');
+        console.error('Unexpected error:', error);
+      }
     }
   };
-
+  
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">

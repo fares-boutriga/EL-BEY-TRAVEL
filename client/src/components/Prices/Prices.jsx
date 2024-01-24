@@ -17,9 +17,9 @@ const Prices = () => {
     { period: 'Supplément suite' },
     { period: 'Supplément Noel' },
   ]);
-
+  const [prices,setPrices]=useState([])
   const handleSubmit = () => {
-  console.log('done')
+  console.log(prices)
   };
 
   const generateRows = (number) => {
@@ -30,7 +30,10 @@ const Prices = () => {
     return rows;
   };
   
-
+const handleInputChange=(value)=>{
+  const indata=[...prices,value]
+setPrices(indata)
+}
   const generateColumns = (number) => {
     const columns = [];
     for (let i = 0; i < number; i++) {
@@ -38,8 +41,8 @@ const Prices = () => {
         <td key={i}>
           <input
           id='price'
-            type="text"
-            onChange={(e) => console.log(e.target.value)}
+            type="number"
+            onBlur={(e) => {handleInputChange(e.target.value)}}
           />
         </td>
       );
@@ -48,7 +51,7 @@ const Prices = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div >
       <table>
         <thead>
           <tr>
@@ -65,8 +68,8 @@ const Prices = () => {
           ))}
         </tbody>
       </table>
-      <button type="submit">Submit</button>
-    </form>
+      <button onClick={handleSubmit} type="submit">Submit</button>
+    </div>
   );
 };
 

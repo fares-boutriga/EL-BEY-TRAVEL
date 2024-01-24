@@ -48,7 +48,7 @@ const Slideshow = ({images}) => {
     <div className="slideshow-container">
         {
             images?.map((el,id)=>(
-               <div className="mySlides fade">
+               <div className="mySlides fade" key={id}>
         <div className="numbertext">{id+1} / {images?.length}</div>
         <img src={el.url} alt="Snow" style={{ width: '100%' }} />
         <div className="text">Caption Two</div>

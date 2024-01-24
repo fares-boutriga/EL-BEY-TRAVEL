@@ -64,7 +64,7 @@ function HotelDetails() {
         <p>nombre des jour {calculateNights()}</p>
         <div>
            <p>nombre des Chombres: </p>
-        <select name="Chombres" class="ipt-select" required>
+        <select name="Chombres" className="ipt-select" required>
 					<option label="1" value="1" selected="selected">1</option>
 					<option label="2" value="2">2</option>
 					<option label="3" value="3">3</option>
@@ -85,7 +85,7 @@ function HotelDetails() {
         <p>Chambre N</p>
         <div>
         <label>Adults</label>
-				<select name="Adults" class="ipt-select" required>
+				<select name="Adults" className="ipt-select" required>
 					<option label="1" value="1">1</option>
 					<option label="2" value="2" selected="selected">2</option>
 					<option label="3" value="3">3</option>
@@ -100,7 +100,7 @@ function HotelDetails() {
         
         <div>
         <span>Enfants</span>
-				<select name="Enfants" class="ipt-select" required>
+				<select name="Enfants" className="ipt-select" required>
 					<option label="0" value="0" selected="selected">0</option>
 					<option label="1" value="1">1</option>
 					<option label="2" value="2">2</option>
@@ -116,9 +116,9 @@ function HotelDetails() {
         
         <div>
           <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"/>
-  <label for="vehicle1"> bébé</label><br/>
+  <label htmlFor="vehicle1"> bébé</label><br/>
           <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"/>
-  <label for="vehicle1"> Deux leit  </label><br/>
+  <label htmlFor="vehicle1"> Deux leit  </label><br/>
       </div>    
         </div>
 

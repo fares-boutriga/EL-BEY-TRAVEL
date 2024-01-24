@@ -5,11 +5,12 @@ import { Link } from 'react-router-dom';
 
 function CreatePeriods() {
   const [NPeriode, setNPeriode] = useState(3);
+  const [post,setPost]=useState(false)
 
   const renderPeriodes = () => {
     const periodes = [];
     for (let i = 0; i < NPeriode; i++) {
-      periodes.push(<OnePeriode key={i} number={i+1} />);
+      periodes.push(<OnePeriode key={i} number={i+1} post={post} NPeriode={NPeriode}/>);
     }
     return periodes;
   };
@@ -31,8 +32,10 @@ function CreatePeriods() {
         </div>
         <div>
           {renderPeriodes()}
-          <Link to={'/'}><button>Return  </button></Link>
-          <Link to={`/Prices/${NPeriode}`}><button>Suivant </button></Link>
+          <Link to={'/'}><button >Return  </button></Link>
+          {/* <Link to={`/Prices/${NPeriode}`}> */}
+            <button onClick={()=>{setPost(!post)}}>Suivant </button>
+            {/* </Link> */}
         </div>
       </div>
     </div>

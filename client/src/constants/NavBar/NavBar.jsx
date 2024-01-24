@@ -37,20 +37,19 @@ import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import LogoutIcon from '@mui/icons-material/Logout';
-
-
-
-
-
-const pages = ['Reservations', 'Mes Hotels', 'Blog'];
-
+import { useNavigate } from 'react-router-dom';
 
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-
+  const [pages,setPages]=React.useState([
+    {page:'Reservations',link:'/HotelDetails'},
+    {page:'Mes Hotels',link:'/myHotels'},
+    {page:'Ajouter un Hotel',link:'/'}
+  
+  ])
+  const navegate=useNavigate()
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -59,14 +58,7 @@ function Navbar() {
     setAnchorElNav(null);
   };
 
-  //this functins of the profile icon
-  //const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-  // const handleOpenUserMenu = (event) => {
-  //   setAnchorElUser(event.currentTarget);
-  // };
-  // const handleCloseUserMenu = () => {
-  //   setAnchorElUser(null);
-  // };
+
 
 
   const Search = styled('div')(({ theme }) => ({
@@ -164,9 +156,10 @@ function Navbar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              {pages.map((e,i) => (
+                <MenuItem key={i} onClick={()=>{handleCloseNavMenu()
+                 navegate(e.link)}}>
+                  <Typography textAlign="center">{e.page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -192,14 +185,17 @@ function Navbar() {
             LOGO fff
           </Typography> */}
          {/* *************** */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+         <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {pages.map((page, index) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                key={index}
+                onClick={() => {
+                  handleCloseNavMenu();
+                  navegate(page.link);
+                }}
+                sx={{ my: 2, color: "white", display: "block" }}
               >
-                {page}
+                {page.page}
               </Button>
             ))}
           </Box>

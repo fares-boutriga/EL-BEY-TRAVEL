@@ -1,19 +1,30 @@
 import React, { useState } from "react";
 import "./CreateHotel.css";
 import { uploadCloudianry } from "./Uplaod";
-import { ImageList, ImageListItem } from "@mui/material";
 import Slideshow from "../Slideshow/Slideshow";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import resizeImage from "../../constants/resizeImage";
 
-const CreateHotel = () => {
+const CreateHotel = ({ setHotelId }) => {
   const [images, setImages] = useState(null);
   const [links, setLinks] = useState([]);
+  const [name, setName] = useState('');
+  const [emailReception, setEmailReception] = useState('');
+  const [emailReservation, setEmailReservation] = useState('');
+  const [category, setCategory] = useState('');
+  const [phone, setPhone] = useState("");
+  const [responsible,setResponsible]=useState("")
+  const [location,setLocation]=useState("")
+  const navigate = useNavigate();
+
   const uploadImages = async (e) => {
     e.preventDefault();
     try {
       let arr = [];
       for (let i = 0; i < images.length; i++) {
-        const data = await uploadCloudianry(images[i]);
+        const resizedImage = await resizeImage(images[i]);
+        const data = await uploadCloudianry(resizedImage);
         arr.push(data);
       }
       setLinks(arr);
@@ -22,48 +33,107 @@ const CreateHotel = () => {
     }
   };
 
-  
+  const postHotel = () => {
+    if (name && emailReception && emailReservation && category) {
+      axios.post('http://127.0.0.1:5000/app/hotel/createHotel', {
+        name,
+        emailReception,
+        emailReservation,
+        images: links[0]?.url || "",
+        category,
+        phone,
+        responsible,
+        location
+      })
+        .then(result => {
+          setHotelId(result.data.id);
+          alert('Hôtel ajouté avec succès');
+          navigate('/CreatePeriods');
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } else {
+      alert('Veuillez remplir tous les champs obligatoires.');
+    }
+  };
+
+  const buttonStyle = {
+    width: "200px",
+    height: "53px",
+  };
+
   return (
     <div className="page">
-        <h2 id="ter">Ajouter nouvelle hotel</h2>
+      <h2 id="ter">Ajouter nouvelle hôtel</h2>
       <div className="createHotel">
         <div>
           <label htmlFor="hotel-name">Nom d'hotel</label>
-          <input type="text" id="hotel-name" />
+          <input
+            type="text"
+            id="hotel-name"
+            required={true}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
         <div className="hotel-categorie">
           <span>Categorie </span>
-          <select name="Categorie" className="ipt-select" required>
-            <option
-              label="Trois étoiles"
-              defaultValue="Trois étoiles"
-              selected="selected"
-            >
+          <select
+            name="Categorie"
+            className="ipt-select"
+            required={true}
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option label="Trois étoiles" value={3}>
               Trois étoiles
             </option>
-            <option label="Quatre étoiles" value="Quatre étoiles">
-              Quatre étoiles{" "}
+            <option label="Quatre étoiles" value={4}>
+              Quatre étoiles
             </option>
-            <option label="Cinq étoiles " value="Cinq étoiles ">
-              Cinq étoiles{" "}
+            <option label="Cinq étoiles" value={5}>
+              Cinq étoiles
             </option>
           </select>
         </div>
         <div className="hotel-Email-reser">
           <span>Réservation </span>
-          <input type="text" placeholder="Email de réservation" />
+          <input
+            type="email"
+            placeholder="Email de réservation"
+            required={true}
+            value={emailReservation}
+            onChange={(e) => setEmailReservation(e.target.value)}
+          />
         </div>
         <div className="hotel-Email-recep">
           <span>Réception </span>
-          <input type="text" placeholder="Email de réception" />
+          <input
+            type="email"
+            placeholder="Email de réception"
+            required={true}
+            value={emailReception}
+            onChange={(e) => setEmailReception(e.target.value)}
+          />
         </div>
         <div className="hotel-phon">
           <span>Téléphone </span>
-          <input type="text" />
+          <input
+            type="number"
+            required={true}
+            maxLength={8}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
         </div>
         <div className="hotel-responsable">
           <span>Responsable </span>
-          <input type="text" placeholder="Nome de responsable" />
+          <input type="text" placeholder="Nome de responsable" required={true} value={responsible} onChange={e=>{setResponsible(e.target.value)}} />
+        </div>
+        <div className="hotel-responsable">
+          <span>Adress </span>
+          <input type="text" placeholder="Adress" required={true} value={location} onChange={e=>{setLocation(e.target.value)}} />
         </div>
         <div className="file-input-container">
           <input
@@ -77,48 +147,20 @@ const CreateHotel = () => {
             multiple={true}
             max={6}
           />
-          {/* <label className="custom-file-input" htmlFor="images">
-            Choisir le fichier
-          </label> */}
           {images && (
             <p className="selected-file-name">
-              Fichier sélectionné: {images.name}
+              Fichier sélectionné: {images[0].name}
             </p>
           )}
         </div>
         <div>
           <button onClick={uploadImages}>Importer les images</button>
         </div>
-        
-        <Link to={"CreatePeriods"}><button style={{ width: "200px", height: "53px" }}>Suivant </button></Link>
-     {/* { links && links.length > 0 &&  
-     <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
-          {links.map((item) => (
-            <ImageListItem key={item.url}>
-              <img
-                srcSet={`${item.url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                src={`${item.url}?w=164&h=164&fit=crop&auto=format`}
-                alt={item.publicId}
-                loading="lazy"
-              />
-            </ImageListItem>
-          ))}
-        </ImageList>
-        
-        } */}
-        <Slideshow images={links}/>
+        <button style={buttonStyle} onClick={postHotel}>
+          Suivant
+        </button>
+        <Slideshow images={links} />
       </div>
-      {/* {links &&
-        links.length > 0 &&
-        links.map((links) => {
-          return (
-            <div key={links?.publicId}>
-              <p>publicId:{links.publicId}</p>
-              <p>url:{links.url}</p>
-              <img width={300} src={links.url} alt="" />
-            </div>
-          );
-        })} */}
     </div>
   );
 };
