@@ -15,7 +15,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios'
 import {useNavigate,Link} from 'react-router-dom'
-import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
 
 // function Copyright(props) {
 //   return (
@@ -46,24 +46,27 @@ export default function Login() {
         password: password,
       });
   
-      const success = result.data.success;
-  
-      if (success) {
-        const token = result.data.token;
-  
-        // Set the token in a cookie (you can customize the cookie options as needed)
-        Cookies.set('token', token);
-  
+      if (result.status === 200) {
+        console.log(result.status);
         navigate('/');
+      } else if (result.status === 404) {
+        console.log(result.status);
+        alert("Access Denied");
       } else {
-        console.log(result.data.message); // Assuming your server sends an error message
+        console.log(result.status);
+        alert('Something went wrong');
       }
     } catch (error) {
-      console.error('Error:', error);
+      if (error.response) {
+        alert(error.response.data.message);
+        console.error('Error:', error.response.data.message);
+      } else {
+        alert('An unexpected error occurred');
+        console.error('Unexpected error:', error);
+      }
     }
   };
   
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
