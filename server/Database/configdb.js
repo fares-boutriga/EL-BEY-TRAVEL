@@ -6,6 +6,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
   define: {
     timestamps: false, 
   },
+  timezone: '+01:00'
 });
 
 module.exports=sequelize

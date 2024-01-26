@@ -4,12 +4,29 @@ const cors =require('cors')
 const sequelize =require('./Database/configdb')
 const cookieParser = require('cookie-parser')
 const AdminRoute=require('./Routes/AdminRoute')
+const HotelRouter=require('./Routes/HotelRoute')
+const PeriodsRoutes=require('./Routes/PeriodsRoute')
+const PricesRoutes=require('./Routes/PricesRoute')
+const NoilRoutes=require('./Routes/NoilRoute')
+const PromotionRoutes=require('./Routes/PromotionRoute')
 const app =express()
 app.use(express.json())
-app.use(cors())
+app.use(
+  cors({
+    origin: 'http://localhost:3000', // Specify your frontend domain
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Enable credentials (cookies, headers) for cross-origin requests
+    optionsSuccessStatus: 204, // Some legacy browsers choke on 204
+  })
+);
 app.use(cookieParser())
 
 app.use('/app/admin',AdminRoute)
+app.use('/app/hotel',HotelRouter)
+app.use('/app/perid',PeriodsRoutes)
+app.use('/app/price',PricesRoutes)
+app.use('/app/noil',NoilRoutes)
+app.use('/app/promotion',PromotionRoutes)
 
 
 sequelize.sync() // You may use { force: true } to drop and recreate tables

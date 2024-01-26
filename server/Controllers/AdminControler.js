@@ -41,11 +41,8 @@ module.exports = {
         const isPasswordMatched = await comparePassword(password, result.password);
 
         if (isPasswordMatched) {
-          const name = result.username;
-          const token = jwt.sign({ name }, process.env.JWT_KEY, { expiresIn: '1d' });
-
-          res.cookie('token', token);
-          res.send({ success: true, message: 'Login successful', token });
+ 
+          res.send({ success: true, message: 'Login successful' });
         } else {
           res.status(401).send({ success: false, message: 'Incorrect password' });
         }
