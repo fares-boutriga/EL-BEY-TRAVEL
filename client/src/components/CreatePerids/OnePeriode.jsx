@@ -2,24 +2,22 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function OnePeriode({number,post,NPeriode}) {
+function OnePeriode({number,post,NPeriode,hotelId}) {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [hotelId,setHotelId]=useState(1)
   
   const navegate=useNavigate()
   useEffect(()=>{
     if(startDate&&endDate){
       postPeriode()
     }
-    
   },[post])
 
   const postPeriode=()=>{
     axios.post('http://127.0.0.1:5000/app/perid/createPeriode',{
       start_date: startDate,
       end_date: endDate,
-      hotelId: 1
+      hotelId: hotelId
     })
     .then(result=>{
       console.log(result)

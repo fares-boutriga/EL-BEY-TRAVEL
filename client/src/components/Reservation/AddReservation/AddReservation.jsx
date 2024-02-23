@@ -10,6 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Rooms from "../Rooms";
 import HotelsPrices from "./HotelsPrices";
+import axios from "axios";
 
 function AddReservation() {
   const today = new Date().toISOString().split("T")[0];
@@ -17,48 +18,87 @@ function AddReservation() {
   const [rooms, setRooms] = useState(1);
   const [checkInDate, setCheckInDate] = useState(today);
   const [checkOutDate, setCheckOutDate] = useState(today);
-  const [roomData, setRoomData] = useState([]);
-  const [location,setLocation]=useState("")
-  const [numberDays,setNumberDays]=useState("")
-useEffect(()=>{setNumberDays(calculateNights)},[checkInDate,checkOutDate])
-const setRoomDataForRoom = (roomNumber, data) => {
-  setRoomData((prevRoomData) => {
-    const updatedRoomData = [...prevRoomData];
-    updatedRoomData[roomNumber - 1] = data; // roomNumber is 1-indexed
-    return updatedRoomData;
-  });
-};
+  const [roomData, setRoomData] = useState([{ nAdult: 1, nKids: 0, kidsAge: [] }]);
+  const [location, setLocation] = useState("");
+  const [numberDays, setNumberDays] = useState("");
+  const [hotels, setHotels] = useState([]);
+  const [hotelPrices, setHotelPrices] = useState({});
+
+  useEffect(() => {
+    setNumberDays(calculateNights());
+  }, [checkInDate, checkOutDate]);
+
+  useEffect(() => {
+    console.log(roomData);
+  }, [roomData]);
+
+  const setRoomDataForRoom = (roomNumber, data) => {
+    setRoomData(prevRoomData => {
+      const updatedRoomData = [...prevRoomData];
+      updatedRoomData[roomNumber - 1] = data;
+      return updatedRoomData;
+    });
+  };
 
   const calculateNights = () => {
     const checkIn = new Date(checkInDate);
     const checkOut = new Date(checkOutDate);
-
     const differenceInTime = checkOut.getTime() - checkIn.getTime();
     const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-    
-    return differenceInDays
+    return differenceInDays;
   };
 
   const generateRoomsForm = () => {
     if (rooms > 0) {
-      const result = [];
-      for (let i = 1; i <= rooms; i++) {
-        result.push(<Rooms key={i} roomNumber={i}  setRoomDataForRoom={setRoomDataForRoom}/>);
-      }
-      return result;
+      return Array.from({ length: rooms }, (_, i) => (
+        <Rooms key={i} roomNumber={i + 1} setRoomDataForRoom={setRoomDataForRoom} />
+      ));
     }
   };
-  // AddReservation component
-const handleSave = () => {
-  // Use the roomData state variable to access all room information
-  console.log(roomData);
-  // Add logic to save the data as needed
-};
+
+  const getHotels = () => {
+    axios
+      .post("http://127.0.0.1:5000/app/hotel/getHotelLocation", {
+        location: location,
+        checkIn: checkInDate,
+        checkout: checkOutDate,
+      })
+      .then(result => {
+        setHotels(result.data);
+        console.log('this is the result', result.data);
+        storePrices(result.data);
+      })
+      .catch(err => {
+        console.log("Error fetching hotels:", err);
+        // Implement error handling here
+      });
+  };
+
+  const storePrices = hotels => {
+    const prices = hotels.reduce((acc, hotel) => {
+      hotel.prices.forEach(price => {
+        acc[price.type] = price;
+      });
+      return acc;
+    }, {});
+    setHotelPrices(prices);
+    console.log(prices);
+  };
+
+  const handleSave = () => {
+    getHotels();
+  };
 
 
   return (
     <>
-      <Paper elevation={3} variant="outlined" square={false} style={{ padding: "20px" }}>
+    <Button onClick={storePrices}>bbbbbbbbbbbbbbb</Button>
+      <Paper
+        elevation={3}
+        variant="outlined"
+        square={false}
+        style={{ padding: "20px" }}
+      >
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12}>
             <FormControl fullWidth>
@@ -127,12 +167,14 @@ const handleSave = () => {
             <Box
               component="div"
               sx={{
-                display: "block",
+                display: "flex",
                 border: "2px",
-                backgroundColor: "green",
+                justifyContent: "center",
+                alignItems: "end",
               }}
+              className="fars"
             >
-              {calculateNights()}
+              <span style={{ fontSize: "40px" }}>{calculateNights()}</span>
             </Box>
           </Grid>
           <Grid item xs={12} sm={12}>
@@ -149,7 +191,7 @@ const handleSave = () => {
               >
                 {[1, 2, 3, 4, 5].map((num) => (
                   <MenuItem key={num} value={num}>
-                    {num} chambre{num > 1 && 's'}
+                    {num} chambre{num > 1 && "s"}
                   </MenuItem>
                 ))}
               </Select>
@@ -158,11 +200,23 @@ const handleSave = () => {
         </Grid>
       </Paper>
       <div style={{ marginTop: "20px" }}>{generateRoomsForm()}</div>
-          <Grid item xl={12} >
-            <Button onClick={handleSave} style={{backgroundColor:'blue',width:'100%'}}>save </Button>
-          </Grid>
-          <HotelsPrices rooms={rooms} checkInDate={checkInDate} checkOutDate={checkOutDate} location={location} numberDays={numberDays} />
-
+      <Grid item xl={12}>
+        <Button
+          onClick={handleSave}
+          style={{ backgroundColor: "green", width: "100%", color: "white" }}
+        >
+          Rechercher{" "}
+        </Button>
+      </Grid>
+      <HotelsPrices
+        rooms={rooms}
+        checkInDate={checkInDate}
+        checkOutDate={checkOutDate}
+        location={location}
+        numberDays={numberDays}
+        roomData={roomData}
+        hotels={hotels}
+      />
     </>
   );
 }

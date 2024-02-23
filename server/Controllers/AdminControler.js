@@ -1,6 +1,8 @@
 const Admin = require('../Database/Models/Admin.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { sign } = require('jsonwebtoken');
+
 require('dotenv').config();
 
 const comparePassword = async (password, hash) => {
@@ -41,8 +43,12 @@ module.exports = {
         const isPasswordMatched = await comparePassword(password, result.password);
 
         if (isPasswordMatched) {
- 
-          res.send({ success: true, message: 'Login successful' });
+          // Generate a JWT token
+          const token = sign({ userId: result.id, username: result.username }, process.env.JWT_SECRET, {
+            expiresIn: '1h' // Set the token expiration time as needed
+          });
+
+          res.json({ success: true, message: 'Login successful', token });
         } else {
           res.status(401).send({ success: false, message: 'Incorrect password' });
         }

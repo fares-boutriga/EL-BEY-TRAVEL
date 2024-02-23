@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./CreateHotel.css";
 import { uploadCloudianry } from "./Uplaod";
-import Slideshow from "../Slideshow/Slideshow";
+import Slideshow from "../Slideshow/Slideshow"
+import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import resizeImage from "../../constants/resizeImage";
@@ -16,11 +17,18 @@ const CreateHotel = ({ setHotelId }) => {
   const [phone, setPhone] = useState("");
   const [responsible,setResponsible]=useState("")
   const [location,setLocation]=useState("")
+  const [loading,setLoading]=useState(false)
   const navigate = useNavigate();
 
   const uploadImages = async (e) => {
     e.preventDefault();
+    if (!images || images.length === 0) {
+      alert('Veuillez sélectionner au moins une image.');
+      return;
+    }
+
     try {
+      setLoading(true);
       let arr = [];
       for (let i = 0; i < images.length; i++) {
         const resizedImage = await resizeImage(images[i]);
@@ -29,12 +37,15 @@ const CreateHotel = ({ setHotelId }) => {
       }
       setLinks(arr);
     } catch (err) {
-      console.log(err);
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const postHotel = () => {
     if (name && emailReception && emailReservation && category) {
+      setLoading(true);
       axios.post('http://127.0.0.1:5000/app/hotel/createHotel', {
         name,
         emailReception,
@@ -45,16 +56,19 @@ const CreateHotel = ({ setHotelId }) => {
         responsible,
         location
       })
-        .then(result => {
-          setHotelId(result.data.id);
-          alert('Hôtel ajouté avec succès');
-          navigate('/CreatePeriods');
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      .then(result => {
+        setHotelId(result.data.id);
+        alert('Hôtel ajouté avec succès');
+        navigate('/CreatePeriods');
+      })
+      .catch(err => {
+        console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
     } else {
-      alert('Veuillez remplir tous les champs obligatoires.');
+      alert('Veuillez remplir tous les champs obligatoires et importer au moins une image.');
     }
   };
 
@@ -129,7 +143,7 @@ const CreateHotel = ({ setHotelId }) => {
         </div>
         <div className="hotel-responsable">
           <span>Responsable </span>
-          <input type="text" placeholder="Nome de responsable" required={true} value={responsible} onChange={e=>{setResponsible(e.target.value)}} />
+          <input type="text" placeholder="Nom de responsable" required={true} value={responsible} onChange={e=>{setResponsible(e.target.value)}} />
         </div>
         <div className="hotel-responsable">
           <span>Adress </span>
@@ -154,12 +168,12 @@ const CreateHotel = ({ setHotelId }) => {
           )}
         </div>
         <div>
-          <button onClick={uploadImages}>Importer les images</button>
+          <button onClick={uploadImages} disabled={loading}>Importer les images</button>
         </div>
-        <button style={buttonStyle} onClick={postHotel}>
+        <button style={buttonStyle} onClick={postHotel} disabled={loading}>
           Suivant
         </button>
-        <Slideshow images={links} />
+        {loading ? (<CircularProgress />) : (<Slideshow images={links} />)}
       </div>
     </div>
   );

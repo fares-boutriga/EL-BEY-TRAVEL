@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { Button } from '@mui/material';
 
 export default function PriceOnePer({setPrices,reload}) {
   const [values, setValues] = useState({
@@ -31,10 +32,19 @@ export default function PriceOnePer({setPrices,reload}) {
       })
   },[reload])
   const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-    setPrices(values)
+    setValues((prevValues) => ({
+      ...prevValues,
+      [prop]: event.target.value
+    }));
+  
+    // Now, setPrices will use the updated state values
+    setPrices((prevPrices) => ({
+      ...prevPrices,
+      [prop]: event.target.value
+    }));
   };
-
+  
+  
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -149,7 +159,7 @@ export default function PriceOnePer({setPrices,reload}) {
             required
             id="supplémentSuite"
             name="supplémentSuite"
-            label="Supplément suite"
+            label="supplémentSuite"
             fullWidth
             variant="standard"
             type='number'
@@ -157,6 +167,8 @@ export default function PriceOnePer({setPrices,reload}) {
             onChange={handleChange('supplémentSuite')}
           />
         </Grid>
+
+      <Button onClick={()=>console.log(values)} >clg supplémentSuite</Button>
       </Grid>
     </React.Fragment>
   );

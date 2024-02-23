@@ -8,7 +8,7 @@ import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Button } from "@mui/material";
 import axios from "axios";
-import {useState } from "react";
+import {useEffect, useState } from "react";
 
 const NoilPrice = ({hotelId}) => {
   const [noil,setNoil]=useState('')
@@ -29,7 +29,7 @@ const NoilPrice = ({hotelId}) => {
     })
   }
 
-
+useEffect(()=>{console.log(hotelId)})
   return (
     <Card>
       <CardContent>

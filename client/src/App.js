@@ -6,28 +6,31 @@ import HotelDetails from './components/HotelDetails/HotelDetails';
 import Login from './components/Login/Login';
 import NavBar from './constants/NavBar/NavBar';
 import Slideshow from './components/Slideshow/Slideshow';
-import Prices from './components/Prices/Prices';
 import SignUp from './components/SignUp/SignUp';
-import TestPrice from './components/Prices/TestPrice';
+import Prices from './components/Prices/Prices';
 import MyHotels from './components/MyHotels/MyHotels';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Promotion from './components/Promotion/Promotion';
 import AddReservation from './components/Reservation/AddReservation/AddReservation';
 import Rooms from './components/Reservation/Rooms';
+import { store } from './store';
+import {Provider} from 'react-redux'
 
 function App() {
   const [hotelId,setHotelId]=useState('')
+  const [newHotel,setNewHotel]=useState('')
+  useEffect(()=>{setNewHotel(hotelId)},[hotelId])
   return (
 
-      <>
+      <Provider store={store} >
       <Router>
         <NavBar />
         <Routes>
           <Route path="/" element={<CreateHotle setHotelId={setHotelId}/>} />
           <Route path="/HotelDetails" element={<HotelDetails />} />
-          <Route path="/CreatePeriods" element={<CreatePeriods />} />
+          <Route path="/CreatePeriods" element={<CreatePeriods hotelId={newHotel}/>} />
           <Route path="/HotelDetails" element={<HotelDetails />} />
-          <Route path="/Prices/:NPeriode" element={<TestPrice  hotelId={hotelId}/>} />
+          <Route path="/Prices/:NPeriode" element={<Prices  hotelId={newHotel}/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<SignUp />} />
           <Route path="/Slideshow" element={<Slideshow />} />
@@ -39,7 +42,7 @@ function App() {
           
         </Routes>
       </Router>
-    </>
+    </Provider>
   );
 }
 

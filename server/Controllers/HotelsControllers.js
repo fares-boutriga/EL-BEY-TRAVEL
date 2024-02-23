@@ -14,9 +14,10 @@ const getPeriodForDate = async (date) => {
       },
       attributes: ['id'],
     });
-    return result.map(period => period.id);
+    return result.map((period) => period.id);
   } catch (error) {
-    throw error;
+    console.error('Error in getPeriodForDate:', error);
+    throw new Error('Unable to fetch periods for the given date');
   }
 };
 

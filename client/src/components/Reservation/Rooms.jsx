@@ -9,17 +9,15 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-function Rooms({ roomNumber,setRoomDataForRoom }) {
+function Rooms({ roomNumber, setRoomDataForRoom }) {
   const [nAdult, setNAdult] = useState(1);
   const [nKids, setNKids] = useState(0);
   const [kidsAge, setKidsAge] = useState([]);
 
+  const generateKidsAgeInput = () => {
+    if (nKids === 0) return null;
 
- // Rooms component
-const generateKidsAgeInput = (setRoomDataForRoom) => {
-  const result = [];
-  for (let i = 0; i < nKids; i++) {
-    result.push(
+    return Array.from({ length: nKids }, (_, i) => (
       <TextField
         key={i}
         required
@@ -33,27 +31,30 @@ const generateKidsAgeInput = (setRoomDataForRoom) => {
           const updatedKidsAge = [...kidsAge];
           updatedKidsAge[i] = e.target.value;
           setKidsAge(updatedKidsAge);
-          const roomData = {
-            nAdult,
-            nKids,
-            kidsAge: updatedKidsAge,
-          };
-          setRoomDataForRoom(roomNumber, roomData);
+          updateRoomData();
         }}
         value={kidsAge[i] || ''}
         style={{ marginTop: '20px' }}
       />
-    );
-  }
-  return result;
-};
-
+    ));
+  };
+useEffect(()=>{
+  updateRoomData()
+},[nAdult])
+  const updateRoomData = () => {
+    const roomData = {
+      nAdult,
+      nKids,
+      kidsAge,
+    };
+    setRoomDataForRoom(roomNumber, roomData);
+  };
 
   return (
     <>
       <Paper elevation={3} variant="outlined" square={false} style={{ padding: '20px' }}>
         <React.Fragment>
-          <h3 style={{backgroundColor:'grey',padding:'5px',borderRadius:'10px'}}>chambre {roomNumber}</h3>
+          <h3 style={{ backgroundColor: 'lightgray', padding: '5px', borderRadius: '10px' }}>chambre {roomNumber}</h3>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
@@ -65,6 +66,7 @@ const generateKidsAgeInput = (setRoomDataForRoom) => {
                   label="Catégorie"
                   onChange={(e) => {
                     setNAdult(e.target.value);
+                    updateRoomData();
                   }}
                 >
                   <MenuItem value={1}>1 Adulte</MenuItem>
@@ -83,8 +85,8 @@ const generateKidsAgeInput = (setRoomDataForRoom) => {
                   value={nKids}
                   label="rooms"
                   onChange={(e) => {
-                    setNKids(e.target.value);
-                    setKidsAge([]); // Reset kidsAge array when the number of kids changes
+                    setNKids((prevNKids) => e.target.value);
+                    updateRoomData();
                   }}
                 >
                   <MenuItem value={0}>0 enfant </MenuItem>
@@ -96,8 +98,8 @@ const generateKidsAgeInput = (setRoomDataForRoom) => {
             </Grid>
 
             <Grid item xs={12}>
-              {nKids>0&& <InputLabel id="kidsAge">Âge d'enfant(s)</InputLabel>}
-              {generateKidsAgeInput(setRoomDataForRoom)}
+              {nKids > 0 && <InputLabel id="kidsAge">Âge d'enfant(s)</InputLabel>}
+              {generateKidsAgeInput()}
             </Grid>
           </Grid>
         </React.Fragment>

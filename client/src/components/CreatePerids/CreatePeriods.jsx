@@ -3,14 +3,14 @@ import './CreatePeriods.css';
 import OnePeriode from './OnePeriode';
 import { Link } from 'react-router-dom';
 
-function CreatePeriods() {
+function CreatePeriods({hotelId}) {
   const [NPeriode, setNPeriode] = useState(3);
   const [post,setPost]=useState(false)
 
   const renderPeriodes = () => {
     const periodes = [];
     for (let i = 0; i < NPeriode; i++) {
-      periodes.push(<OnePeriode key={i} number={i+1} post={post} NPeriode={NPeriode}/>);
+      periodes.push(<OnePeriode key={i} number={i+1} post={post} NPeriode={NPeriode} hotelId={hotelId} />);
     }
     return periodes;
   };
