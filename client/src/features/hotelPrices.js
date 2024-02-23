@@ -1,14 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const   hotelPricesSlices= createSlice({
- name:'hotelPrices',
- initialState:{value:{  logementSimple: "",petitDej: "",demiePension: "",pensionComplète: "",allInSoft: "",allIn: "",supplémentSingle: "",supplémentVueSurMer: "",supplémentSuite: ""}},
- reducers:{
-    getPrices:(state,action)=>{
-        state.value=action.payload
-    }
- }
-})
+const initialState = {
+  value: {},
+};
 
- const hotelReducer=hotelPricesSlices.reducer
-export default hotelReducer
+export const hotelPricesSlice = createSlice({
+  name: 'hotelPrices',
+  initialState,
+  reducers: {
+    getPrices: (state, action) => {
+      state.value = action.payload;
+    },
+  },
+});
+
+export const { getPrices } = hotelPricesSlice.actions;
+export default hotelPricesSlice.reducer;

@@ -1,15 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const   rooms= createSlice({
+export const   roomsSlice= createSlice({
  name:'roomData',
  //room number is the number of the room not the number of rooms (ex: rome number 1,room number 2,...)
- initialState:{value:{  roomNumber: "",roomPrice: "",nAdults: "",nKids: "",kidsAge: []}},
+ initialState:{values:[]},
  reducers:{
     getRoomData:(state,action)=>{
-        state.value=action.payload
+        state.values=action.payload
     }
  }
 })
 
- const roomsReducer=rooms.reducer
+export const { getRoomData } = roomsSlice.actions;
+ const roomsReducer=roomsSlice.reducer
 export default roomsReducer

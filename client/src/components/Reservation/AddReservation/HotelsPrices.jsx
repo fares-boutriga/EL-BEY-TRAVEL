@@ -9,17 +9,20 @@ import Sheet from "@mui/joy/Sheet";
 import axios from "axios";
 import hotelImage from "../../../assets/hotel.png";
 import { Rating } from "@mui/material";
+import {getRoomData} from '../../../features/roomsSlice'
+import { useDispatch, useSelector } from "react-redux";
 
 function HotelsPrices({
   rooms,
   checkInDate,
   checkOutDate,
-  location,
   numberDays,
   roomData,
   hotels,
 }) {
+  const { values} = useSelector((state) => state.roomData);
 
+  const dispatch = useDispatch(); 
 
   const fixPrice = (currentPrice, periods) => {
     let result = null;
@@ -66,6 +69,8 @@ function HotelsPrices({
     console.log("This is the number of adults:", roomData[0].nAdult === 1);
     console.log("Rooms price:", roomsPrice);
     console.log("Room data:", roomData);
+    dispatch(getRoomData(roomData));
+
   };
 
   return (
@@ -80,6 +85,7 @@ function HotelsPrices({
           }}
         >
           <button onClick={() => handleRoomsPrice(e.prices)}>Romms</button>
+          <button onClick={() => console.log(values)}>Romms12</button>
           {/* <button onClick={()=>console.log(e.prices)}>prices</button> */}
           {/* <span>the id of the price of supplémentSingle est {getIdOfPiceByType(e.price,'supplémentSingle')}</span> */}
           <Card
