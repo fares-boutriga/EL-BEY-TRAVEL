@@ -6,14 +6,13 @@ import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
-import axios from "axios";
 import hotelImage from "../../../assets/hotel.png";
 import { Rating } from "@mui/material";
 import {getRoomData} from '../../../features/roomsSlice'
 import { useDispatch, useSelector } from "react-redux";
+import { setTotal } from "../../../features/resrvationSlice";
 
 function HotelsPrices({
-  rooms,
   checkInDate,
   checkOutDate,
   numberDays,
@@ -21,6 +20,7 @@ function HotelsPrices({
   hotels,
 }) {
   const { values} = useSelector((state) => state.roomData);
+  const supplement = useSelector(state => state.reservation.supplement);
 
   const dispatch = useDispatch(); 
 
@@ -53,16 +53,56 @@ function HotelsPrices({
     return result;
   };
 
-  const handleRoomsPrice = (arr) => {
+  const handleRoomsPrice = (arr,supp) => {
     let roomsPrice = {};
-  
+    let total=0
     for (let i = 0; i < roomData.length; i++) {
       const roomNumber = `room${i + 1}`;
-  
-      if (roomData[i].nAdult === 1) {
-        roomsPrice[roomNumber] = arr[4].price;
-      } else if (roomData[i].nAdult > 1) {
-        roomsPrice[roomNumber] = arr[0].price;
+
+      if (roomData[i].nAdult === 1&&supp==='logementSimple') {
+        roomsPrice[roomNumber] = arr[4].price+arr[0].price
+      } else if (roomData[i].nAdult > 1 &&supp==='logementSimple') {
+        roomsPrice[roomNumber] = arr[0].price *2;
+      }
+      if (roomData[i].nAdult === 1&&supp==="petitDej") {
+        roomsPrice[roomNumber] = arr[4].price+arr[1].price
+      } else if (roomData[i].nAdult > 1 &&supp==="petitDej") {
+        roomsPrice[roomNumber] = arr[1].price *2;
+      }
+      if (roomData[i].nAdult === 1&&supp==="supplémentVueSurMer") {
+        roomsPrice[roomNumber] = arr[4].price+arr[2].price
+      } else if (roomData[i].nAdult > 1 &&supp==="supplémentVueSurMer") {
+        roomsPrice[roomNumber] = arr[2].price *2;
+      }
+      if (roomData[i].nAdult === 1&&supp==="demiePension") {
+        roomsPrice[roomNumber] = arr[4].price+arr[3].price
+      } else if (roomData[i].nAdult > 1 &&supp==="demiePension") {
+        roomsPrice[roomNumber] = arr[3].price *2;
+      }
+      if (roomData[i].nAdult === 1&&supp==="demiePension") {
+        roomsPrice[roomNumber] = arr[4].price+arr[3].price
+      } else if (roomData[i].nAdult > 1 &&supp==="demiePension") {
+        roomsPrice[roomNumber] = arr[3].price *2;
+      }
+      if (roomData[i].nAdult === 1&&supp==="pensionComplete") {
+        roomsPrice[roomNumber] = arr[4].price+arr[5].price
+      } else if (roomData[i].nAdult > 1 &&supp==="pensionComplete") {
+        roomsPrice[roomNumber] = arr[5].price *2;
+      }
+      if (roomData[i].nAdult === 1&&supp==="allInSoft") {
+        roomsPrice[roomNumber] = arr[4].price+arr[6].price
+      } else if (roomData[i].nAdult > 1 &&supp==="allInSoft") {
+        roomsPrice[roomNumber] = arr[6].price *2;
+      }
+      if (roomData[i].nAdult === 1&&supp==="allIn") {
+        roomsPrice[roomNumber] = arr[4].price+arr[7].price
+      } else if (roomData[i].nAdult > 1 &&supp==="allIn") {
+        roomsPrice[roomNumber] = arr[7].price *2;
+      }
+      if (roomData[i].nAdult === 1&&supp==="supplementSuite") {
+        roomsPrice[roomNumber] = arr[4].price+arr[8].price
+      } else if (roomData[i].nAdult > 1 &&supp==="supplémentSuite") {
+        roomsPrice[roomNumber] = arr[8].price *2;
       }
     }
   
@@ -70,7 +110,12 @@ function HotelsPrices({
     console.log("Rooms price:", roomsPrice);
     console.log("Room data:", roomData);
     dispatch(getRoomData(roomData));
-
+    for(let key in roomsPrice ){
+      total +=roomsPrice[key]
+    }
+    console.log('this is the total',total * numberDays)
+    dispatch(setTotal(total*numberDays ))
+    return total * numberDays
   };
 
   return (
@@ -120,7 +165,7 @@ function HotelsPrices({
                 fontWeight="lg"
                 textColor="text.tertiary"
               >
-                {fixPrice(e.prices[0].price, e.periods)}
+                {handleRoomsPrice(e.prices, supplement)}
               </Typography>
               <Sheet
                 sx={{

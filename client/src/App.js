@@ -15,6 +15,7 @@ import AddReservation from './components/Reservation/AddReservation/AddReservati
 import Rooms from './components/Reservation/Rooms';
 import { store } from './store';
 import {Provider} from 'react-redux'
+import UpdateReservation from './components/Reservation/UpdateReservation';
 
 function App() {
   const [hotelId,setHotelId]=useState('')
@@ -27,9 +28,9 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<CreateHotle setHotelId={setHotelId}/>} />
+          {/* delete the hotel details component */}
           <Route path="/HotelDetails" element={<HotelDetails />} />
           <Route path="/CreatePeriods" element={<CreatePeriods hotelId={newHotel}/>} />
-          <Route path="/HotelDetails" element={<HotelDetails />} />
           <Route path="/Prices/:NPeriode" element={<Prices  hotelId={newHotel}/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<SignUp />} />
@@ -38,6 +39,7 @@ function App() {
           <Route path="/p" element={<Promotion />} />
           <Route path="/add" element={<AddReservation />} />
           <Route path="/room" element={<Rooms />} />
+          <Route path="/up" element={<UpdateReservation />} />
           {/* <Route path="/register" element={<RegisterPage />} /> */} 
           
         </Routes>

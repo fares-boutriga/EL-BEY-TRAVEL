@@ -14,9 +14,9 @@ export default function PriceOnePer({setPrices,reload}) {
     pensionComplète: "",
     allInSoft: "",
     allIn: "",
-    supplémentSingle: "",
-    supplémentVueSurMer: "",
-    supplémentSuite: "",
+    supplementSingle: "",
+    supplementVueSurMer: "",
+    supplementSuite: "",
   });
   useEffect(()=>{
     setValues({
@@ -26,9 +26,9 @@ export default function PriceOnePer({setPrices,reload}) {
         pensionComplète: "",
         allInSoft: "",
         allIn: "",
-        supplémentSingle: "",
-        supplémentVueSurMer: "",
-        supplémentSuite: ""
+        supplementSingle: "",
+        supplementVueSurMer: "",
+        supplementSuite: ""
       })
   },[reload])
   const handleChange = (prop) => (event) => {
@@ -131,14 +131,14 @@ export default function PriceOnePer({setPrices,reload}) {
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="supplémentSingle"
-            name="supplémentSingle"
+            id="supplementSingle"
+            name="supplementSingle"
             label="Supplément single"
             fullWidth
             variant="standard"
             type='number'
-            value={values.supplémentSingle}
-            onChange={handleChange('supplémentSingle')}
+            value={values.supplementSingle}
+            onChange={handleChange('supplementSingle')}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -150,25 +150,25 @@ export default function PriceOnePer({setPrices,reload}) {
             fullWidth
             variant="standard"
             type='number'
-            value={values.supplémentVueSurMer}
-            onChange={handleChange('supplémentVueSurMer')}
+            value={values.supplementVueSurMer}
+            onChange={handleChange('supplementVueSurMer')}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="supplémentSuite"
-            name="supplémentSuite"
-            label="supplémentSuite"
+            id="supplementSuite"
+            name="supplementSuite"
+            label="supplementSuite"
             fullWidth
             variant="standard"
             type='number'
-            value={values.supplémentSuite}
-            onChange={handleChange('supplémentSuite')}
+            value={values.supplementSuite}
+            onChange={handleChange('supplementSuite')}
           />
         </Grid>
 
-      <Button onClick={()=>console.log(values)} >clg supplémentSuite</Button>
+      <Button onClick={()=>console.log(values)} >clg supplementSuite</Button>
       </Grid>
     </React.Fragment>
   );
