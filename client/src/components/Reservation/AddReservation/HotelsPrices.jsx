@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { NavLink } from 'react-router-dom';
 import AspectRatio from "@mui/joy/AspectRatio";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -8,7 +9,7 @@ import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
 import hotelImage from "../../../assets/hotel.png";
 import { Rating } from "@mui/material";
-import {getRoomData} from '../../../features/roomsSlice'
+import {getRoomData, getRoomPrices} from '../../../features/roomsSlice'
 import { useDispatch, useSelector } from "react-redux";
 import { setTotal } from "../../../features/resrvationSlice";
 
@@ -21,37 +22,24 @@ function HotelsPrices({
 }) {
   const { values} = useSelector((state) => state.roomData);
   const supplement = useSelector(state => state.reservation.supplement);
+  const total = useSelector(state => state.reservation.total);
 
   const dispatch = useDispatch(); 
 
-  const fixPrice = (currentPrice, periods) => {
-    let result = null;
+  useEffect(() => {
+    hotels?.forEach((e) => {
+      handleRoomsPrice(e.prices, supplement);
+    });
+  }, [hotels, supplement,numberDays,roomData]);
 
-    if (periods?.length < 2) {
-      result = currentPrice * numberDays;
-    } else {
-      const checkInPeriod1 = new Date(checkInDate);
-      const checkOutPeriod1 = new Date(periods[0].end_date);
-      const checkInPeriod2 = new Date(periods[1].start_date);
-      const checkOutPeriod2 = new Date(checkOutDate);
-
-      const differenceInTimePeriod1 =
-        checkOutPeriod1.getTime() - checkInPeriod1.getTime();
-      const differenceInDaysPeriod1 =
-        differenceInTimePeriod1 / (1000 * 3600 * 24);
-      const differenceInTimePeriod2 =
-        checkOutPeriod2.getTime() - checkInPeriod2.getTime();
-      const differenceInDaysPeriod2 =
-        differenceInTimePeriod2 / (1000 * 3600 * 24);
-
-      result =
-        differenceInDaysPeriod1 * currentPrice +
-        differenceInDaysPeriod2 * currentPrice;
-      console.log(checkInPeriod1, checkOutPeriod1);
+  function findObjectByType(arr, type) {
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].type === type) {
+            return arr[i].price;
+        }
     }
-
-    return result;
-  };
+    return null; // Return null if no match is found
+}
 
   const handleRoomsPrice = (arr,supp) => {
     let roomsPrice = {};
@@ -60,9 +48,9 @@ function HotelsPrices({
       const roomNumber = `room${i + 1}`;
 
       if (roomData[i].nAdult === 1&&supp==='logementSimple') {
-        roomsPrice[roomNumber] = arr[4].price+arr[0].price
+        roomsPrice[roomNumber] = findObjectByType(arr,'supplementSingle')+findObjectByType(arr,'logementSimple')
       } else if (roomData[i].nAdult > 1 &&supp==='logementSimple') {
-        roomsPrice[roomNumber] = arr[0].price *2;
+        roomsPrice[roomNumber] = findObjectByType(arr,'logementSimple') *2;
       }
       if (roomData[i].nAdult === 1&&supp==="petitDej") {
         roomsPrice[roomNumber] = arr[4].price+arr[1].price
@@ -110,6 +98,7 @@ function HotelsPrices({
     console.log("Rooms price:", roomsPrice);
     console.log("Room data:", roomData);
     dispatch(getRoomData(roomData));
+    dispatch(getRoomPrices(roomData));
     for(let key in roomsPrice ){
       total +=roomsPrice[key]
     }
@@ -129,8 +118,8 @@ function HotelsPrices({
             overflow: { xs: "auto", sm: "initial" },
           }}
         >
-          <button onClick={() => handleRoomsPrice(e.prices)}>Romms</button>
-          <button onClick={() => console.log(values)}>Romms12</button>
+          <button onClick={() => handleRoomsPrice(e.prices)}>Rooms</button>
+          <button onClick={() => console.log(values)}>Rooms12</button>
           {/* <button onClick={()=>console.log(e.prices)}>prices</button> */}
           {/* <span>the id of the price of supplémentSingle est {getIdOfPiceByType(e.price,'supplémentSingle')}</span> */}
           <Card
@@ -160,12 +149,11 @@ function HotelsPrices({
               <Typography fontSize="xl" fontWeight="lg">
                 {e.name}
               </Typography>
-              <Typography
-                level="body-sm"
-                fontWeight="lg"
-                textColor="text.tertiary"
-              >
-                {handleRoomsPrice(e.prices, supplement)}
+              <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
+                {supplement}
+              </Typography>
+              <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
+                {total}
               </Typography>
               <Sheet
                 sx={{
@@ -192,8 +180,11 @@ function HotelsPrices({
                   variant="solid"
                   color="primary"
                   onClick={() => console.log(e.prices)}
-                >
+                >  <NavLink to="/validReservation">
+                  
                   Reservez
+                </NavLink>
+                  
                 </Button>
               </Box>
             </CardContent>

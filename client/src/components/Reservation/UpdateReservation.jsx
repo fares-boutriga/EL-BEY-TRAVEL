@@ -11,6 +11,7 @@ import { Typography, Box } from '@mui/material';
 export default function UpdateReservation() {
   const dispatch = useDispatch(); // Get the dispatch function from useDispatch
   const supplement = useSelector(state => state.reservation.supplement); // Get the supplement state from Redux
+  const roomData = useSelector(state => state.reservation.roomData); 
 
   const handleSupplementChange = (event) => {
     dispatch(setSupplement(event.target.value)); // Dispatch the setSupplement action to update the supplement state in Redux

@@ -39,7 +39,7 @@ function App() {
           <Route path="/p" element={<Promotion />} />
           <Route path="/add" element={<AddReservation />} />
           <Route path="/room" element={<Rooms />} />
-          <Route path="/up" element={<UpdateReservation />} />
+          <Route path="/validReservation" element={<UpdateReservation />} />
           {/* <Route path="/register" element={<RegisterPage />} /> */} 
           
         </Routes>
