@@ -1,18 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  value: {},
+  theHotel: [],
 };
 
 export const hotelPricesSlice = createSlice({
   name: 'hotelPrices',
   initialState,
   reducers: {
-    getPrices: (state, action) => {
-      state.value = action.payload;
+    selectOneHotel: (state, action) => {
+      state.theHotel = [action.payload ]; // or use immer to update state immutably
     },
   },
 });
 
-export const { getPrices } = hotelPricesSlice.actions;
-export default hotelPricesSlice.reducer;
+export const { selectOneHotel } = hotelPricesSlice.actions;
+const hotelReducer=hotelPricesSlice.reducer
+export default hotelReducer

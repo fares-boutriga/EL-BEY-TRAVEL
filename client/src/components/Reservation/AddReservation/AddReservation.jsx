@@ -11,6 +11,10 @@ import Select from "@mui/material/Select";
 import Rooms from "../Rooms";
 import HotelsPrices from "./HotelsPrices";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoomData, getRoomPrices } from "../../../features/roomsSlice";
+import { setDaysNumber, setReservatioinDate, setTotal } from "../../../features/resrvationSlice";
+import {findObjectByType, findPeriodId, sumUsingReduceArrow} from "../../../utils/helper";
 
 function AddReservation() {
   const today = new Date().toISOString().split("T")[0];
@@ -19,18 +23,23 @@ function AddReservation() {
   const [checkInDate, setCheckInDate] = useState(today);
   const [checkOutDate, setCheckOutDate] = useState(today);
   const [roomData, setRoomData] = useState([{ nAdult: 1, nKids: 0, kidsAge: [] }]);
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState("jerba");
   const [numberDays, setNumberDays] = useState("");
   const [hotels, setHotels] = useState([]);
   const [hotelPrices, setHotelPrices] = useState({});
+  const [result,setResult]=useState([])
+  const [test,setTest]=useState({})
+  const dispatch = useDispatch(); 
 
   useEffect(() => {
     setNumberDays(calculateNights());
-  }, [checkInDate, checkOutDate]);
+    dispatch(setDaysNumber(calculateNights()))
+    dispatch(setReservatioinDate({ checkInDate: checkInDate,checkOutDate: checkOutDate }));
+     }, [checkInDate, checkOutDate]);
 
-  useEffect(() => {
-    console.log(roomData);
-  }, [roomData]);
+  // useEffect(() => {
+  //   console.log('thi is hte room data',roomData);
+  // }, [roomData]);
 
   const setRoomDataForRoom = (roomNumber, data) => {
     setRoomData(prevRoomData => {
@@ -65,7 +74,7 @@ function AddReservation() {
       })
       .then(result => {
         setHotels(result.data);
-        console.log('this is the result', result.data);
+        // console.log('this is the result', result.data);
         storePrices(result.data);
       })
       .catch(err => {
@@ -82,17 +91,112 @@ function AddReservation() {
       return acc;
     }, {});
     setHotelPrices(prices);
-    console.log(prices);
-  };
+    };
 
   const handleSave = () => {
     getHotels();
   };
+  const supplement = useSelector(state => state.reservation.supplement);
+  // console.log('resfqsdf',theTotal)
+  useEffect(() => {
+    hotels?.forEach((e,i) => {
+      handleRoomsPrice(e.prices, supplement,roomData,e.periods);
+    });
+    // dispatch(setTotal(result));
+    dispatch(setTotal([result[result.length-1]]))
+    setResult([])
+    dispatch(getRoomData(roomData));
+  }, [hotels, supplement,numberDays,roomData]);
+
+  // useEffect(()=>{
+  //   console.log('this is the fares',result)
+  // },[result])
 
 
+  const handleRoomsPrice = (arrPrices,supp,roomData,periods) => {
+    let roomsPricesByDay={}
+    let roomsPrice = {};
+    let total=0
+    const upresult=[]
+    const checkIn = new Date(checkInDate);
+    const checkOut = new Date(checkOutDate);
+
+    for (let currentDate = checkIn; currentDate < checkOut; currentDate.setDate(currentDate.getDate() + 1)) {
+      const idPeriod = findPeriodId(periods, currentDate.toISOString().split('T')[0]);
+      const dayy=`day ${currentDate}`
+      for (let i = 0; i < roomData.length; i++) {
+        const roomNumber = `room${i + 1}`;
+  
+        if (roomData[i].nAdult === 1&&supp==='logementSimple') {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'supplementSingle',idPeriod)+findObjectByType(arrPrices,'logementSimple',idPeriod)
+          // console.log('gares',findObjectByType(arrPrices,'logementSimple',idPeriod),i)
+        } else if (roomData[i].nAdult > 1 &&supp==='logementSimple') {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'logementSimple',idPeriod) *2;
+        }
+        if (roomData[i].nAdult === 1&&supp==="petitDej") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'supplementSingle',idPeriod)+findObjectByType(arrPrices,'petitDej',idPeriod)
+        } else if (roomData[i].nAdult > 1 &&supp==="petitDej") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'petitDej',idPeriod) *2;
+        }
+        if (roomData[i].nAdult === 1&&supp==="supplémentVueSurMer") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'supplementSingle',idPeriod)+findObjectByType(arrPrices,'supplémentVueSurMer',idPeriod)
+        } else if (roomData[i].nAdult > 1 &&supp==="supplémentVueSurMer") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'supplémentVueSurMer',idPeriod) *2;
+        }
+        if (roomData[i].nAdult === 1&&supp==="demiePension") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'supplementSingle',idPeriod)+findObjectByType(arrPrices,'demiePension',idPeriod)
+        } else if (roomData[i].nAdult > 1 &&supp==="demiePension") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'demiePension',idPeriod) *2;
+        }
+        
+        if (roomData[i].nAdult === 1&&supp==="pensionComplete") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'supplementSingle',idPeriod)+findObjectByType(arrPrices,'pensionComplete',idPeriod)
+        } else if (roomData[i].nAdult > 1 &&supp==="pensionComplete") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'pensionComplete',idPeriod) *2;
+        }
+        if (roomData[i].nAdult === 1&&supp==="allInSoft") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'supplementSingle',idPeriod)+findObjectByType(arrPrices,'allInSoft',idPeriod)
+        } else if (roomData[i].nAdult > 1 &&supp==="allInSoft") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'allInSoft',idPeriod) *2;
+        }
+        if (roomData[i].nAdult === 1&&supp==="allIn") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'supplementSingle',idPeriod)+findObjectByType(arrPrices,'allIn',idPeriod)
+        } else if (roomData[i].nAdult > 1 &&supp==="allIn") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'allIn',idPeriod) *2;
+        }
+        if (roomData[i].nAdult === 1&&supp==="supplementSuite") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'supplementSingle',idPeriod)+findObjectByType(arrPrices,'supplementSuite',idPeriod)
+        } else if (roomData[i].nAdult > 1 &&supp==="supplémentSuite") {
+          roomsPrice[roomNumber] = findObjectByType(arrPrices,'supplementSuite',idPeriod) *2;
+        }
+     
+      }  
+      roomsPricesByDay[dayy]=roomsPrice
+      for (let key in roomsPrice) {
+        total += roomsPrice[key];
+      }
+      
+      total = total ;
+      // console.log('this is the total', total);
+      upresult.push(total)
+      setResult(result.push(total))
+      console.log('dsqfg,sqsgl,mlq,vlmq,gkblqer,gzrgrgr',roomsPrice)
+  }
+   
+    // console.log("This is the number of adults:", roomData[0].nAdult === 1);
+    // console.log("Rooms price:", roomsPrice);
+    // console.log("Room data:", roomData);
+    dispatch(getRoomData(roomData));
+    dispatch(getRoomPrices(roomData));
+
+    // hotels[index].tot=total
+    // console.log('this is the result',roomsPricesByDay)
+    setTest(sumUsingReduceArrow(result))
+    
+  };
   return (
     <>
-    <Button onClick={storePrices}>bbbbbbbbbbbbbbb</Button>
+    {/* <Button onClick={console.log(checkInDate)}>bbbbbbbbbbbbbbb</Button> */}
       <Paper
         elevation={3}
         variant="outlined"
@@ -144,6 +248,7 @@ function AddReservation() {
               type="date"
               onChange={(e) => {
                 setCheckInDate(e.target.value);
+                
               }}
               value={checkInDate}
             />
@@ -159,6 +264,7 @@ function AddReservation() {
               type="date"
               onChange={(e) => {
                 setCheckOutDate(e.target.value);
+               
               }}
               value={checkOutDate}
             />

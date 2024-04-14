@@ -1,0 +1,68 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .voucher {
+    width: 900px; /* Adjust width as needed */
+    margin: 50px auto;
+    border: 1px solid #ddd;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .voucher-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+  }
+  
+  h3 {
+    font-size: 18px;
+    font-weight: normal;
+  }
+  
+  .voucher-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .voucher-details,
+  .voucher-room-details {
+    width: 100%;
+  }
+  
+  .voucher-details table,
+  .voucher-room-details table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th,
+  td {
+    padding: 5px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  th {
+    font-weight: bold;
+  }
+  
+  .voucher-room-details {
+    margin-top: 20px;
+  }
+  
+  .voucher-footer {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Add more styles as needed */
+  

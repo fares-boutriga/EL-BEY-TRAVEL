@@ -1,12 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { selectPeriodsId } from '../../features/periodSlice';
 
 function OnePeriode({number,post,NPeriode,hotelId}) {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  
+  const dispatch=useDispatch()
   const navegate=useNavigate()
+
+
   useEffect(()=>{
     if(startDate&&endDate){
       postPeriode()
@@ -20,8 +24,8 @@ function OnePeriode({number,post,NPeriode,hotelId}) {
       hotelId: hotelId
     })
     .then(result=>{
-      console.log(result)
       alert('done')
+      dispatch(selectPeriodsId(result.data.id))
       navegate(`/Prices/${NPeriode}`)
     }).catch(err=>{ 
            console.log(`this is the star date ${startDate} and this is the end date ${endDate} and this the hotel id ${hotelId}`)

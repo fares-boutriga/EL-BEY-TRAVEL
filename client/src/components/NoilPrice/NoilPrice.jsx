@@ -20,7 +20,6 @@ const NoilPrice = ({hotelId}) => {
       noil:noil,
       saintSylvester:saintSylvester
     }).then(result=>{
-      console.log(result)
       alert('ajouter avec sucssi')
     })
     .catch(err=>{

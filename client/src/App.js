@@ -16,6 +16,8 @@ import Rooms from './components/Reservation/Rooms';
 import { store } from './store';
 import {Provider} from 'react-redux'
 import UpdateReservation from './components/Reservation/UpdateReservation';
+import DateChecker from './components/Reservation/DateChecker';
+import Print from './components/Print';
 
 function App() {
   const [hotelId,setHotelId]=useState('')
@@ -40,6 +42,8 @@ function App() {
           <Route path="/add" element={<AddReservation />} />
           <Route path="/room" element={<Rooms />} />
           <Route path="/validReservation" element={<UpdateReservation />} />
+          <Route path="/date" element={<DateChecker />} />
+          <Route path="/print" element={<Print />} />
           {/* <Route path="/register" element={<RegisterPage />} /> */} 
           
         </Routes>

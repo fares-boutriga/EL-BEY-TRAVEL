@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Paper } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import React, { useEffect, useState } from "react";
+import { Checkbox, FormControlLabel, Paper } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { useDispatch } from "react-redux";
+import { getRoomData } from "../../features/roomsSlice";
 
 function Rooms({ roomNumber, setRoomDataForRoom }) {
   const [nAdult, setNAdult] = useState(1);
   const [nKids, setNKids] = useState(0);
   const [kidsAge, setKidsAge] = useState([]);
-
+  const [baby,setBaby]=useState(false)
+  const dispatch=useDispatch()
+  dispatch(getRoomData([{ nAdult, nKids,baby, kidsAge }]))
   const generateKidsAgeInput = () => {
     if (nKids === 0) return null;
 
@@ -33,14 +35,14 @@ function Rooms({ roomNumber, setRoomDataForRoom }) {
           setKidsAge(updatedKidsAge);
           updateRoomData();
         }}
-        value={kidsAge[i] || ''}
-        style={{ marginTop: '20px' }}
+        value={kidsAge[i] || ""}
+        style={{ marginTop: "20px" }}
       />
     ));
   };
-useEffect(()=>{
-  updateRoomData()
-},[nAdult])
+  useEffect(() => {
+    updateRoomData();
+  }, [nAdult]);
   const updateRoomData = () => {
     const roomData = {
       nAdult,
@@ -49,14 +51,29 @@ useEffect(()=>{
     };
     setRoomDataForRoom(roomNumber, roomData);
   };
-
+  const handleChange = () => {
+    setBaby(!baby);
+  };
   return (
     <>
-      <Paper elevation={3} variant="outlined" square={false} style={{ padding: '20px' }}>
+      <Paper
+        elevation={3}
+        variant="outlined"
+        square={false}
+        style={{ padding: "20px" }}
+      >
         <React.Fragment>
-          <h3 style={{ backgroundColor: 'lightgray', padding: '5px', borderRadius: '10px' }}>chambre {roomNumber}</h3>
+          <h3
+            style={{
+              backgroundColor: "lightgray",
+              padding: "5px",
+              borderRadius: "10px",
+            }}
+          >
+            chambre {roomNumber}
+          </h3>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={5}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">N° Adults</InputLabel>
                 <Select
@@ -76,7 +93,7 @@ useEffect(()=>{
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={5}>
               <FormControl fullWidth>
                 <InputLabel id="Kids">N° Enfants</InputLabel>
                 <Select
@@ -96,9 +113,19 @@ useEffect(()=>{
                 </Select>
               </FormControl>
             </Grid>
-
+            <Grid item xs={12} sm={2}>
+              <Checkbox
+                checked={baby}
+                onChange={handleChange}
+                inputProps={{ "aria-label": "primary checkbox" }}
+                label="Secondsdfdary"
+              />
+              <span>Bébé</span>
+            </Grid>
             <Grid item xs={12}>
-              {nKids > 0 && <InputLabel id="kidsAge">Âge d'enfant(s)</InputLabel>}
+              {nKids > 0 && (
+                <InputLabel id="kidsAge">Âge d'enfant(s)</InputLabel>
+              )}
               {generateKidsAgeInput()}
             </Grid>
           </Grid>

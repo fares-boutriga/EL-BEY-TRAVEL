@@ -2,8 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   value: {},
-  total: 0,
-  supplement: 'logementSimple'
+  theTotal: [],
+  supplement: 'petitDej',
+  totalAmount:null,
+  daysNumber:0,
+  reservationDate:{checkInDate:'',checkOutDate:''}
 };
 
 export const reservationSlice = createSlice({
@@ -11,17 +14,27 @@ export const reservationSlice = createSlice({
   initialState,
   reducers: {
     saveReservation: (state, action) => {
-      state.value = action.payload;
+      state.value = { ...action.payload };
     },
     setTotal: (state, action) => {
-      state.total = action.payload;
+      state.theTotal = action.payload;
     },
     setSupplement: (state, action) => {
       state.supplement = action.payload;
     },
+    setTotalAmount: (state, action) => {
+      state.totalAmount = action.payload;
+    },
+    setDaysNumber: (state, action) => {
+      state.daysNumber = action.payload;
+    },
+    setReservatioinDate: (state, action) => {
+      state.reservationDate = action.payload;
+    },
   },
+  
 });
 
-export const { saveReservation, setTotal, setSupplement } = reservationSlice.actions;
+export const { saveReservation, setTotal, setSupplement,setTotalAmount,setDaysNumber,setReservatioinDate } = reservationSlice.actions;
 export const reservationReducer = reservationSlice.reducer;
 export default reservationReducer;

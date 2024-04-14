@@ -9,107 +9,33 @@ import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
 import hotelImage from "../../../assets/hotel.png";
 import { Rating } from "@mui/material";
-import {getRoomData, getRoomPrices} from '../../../features/roomsSlice'
 import { useDispatch, useSelector } from "react-redux";
-import { setTotal } from "../../../features/resrvationSlice";
+import { setTotal, setTotalAmount } from "../../../features/resrvationSlice";
+import { selectOneHotel } from "../../../features/hotelPrices";
+import { findObjectByType, findPeriodId, handleRoomsPrice } from "../../../utils/helper";
 
 function HotelsPrices({
-  checkInDate,
-  checkOutDate,
-  numberDays,
+  // checkInDate,
+  // checkOutDate,
+  // numberDays,
   roomData,
   hotels,
 }) {
+  const checkInDate = useSelector((state) => state.reservation.reservationDate.checkInDate);
+  const checkOutDate = useSelector((state) => state.reservation.reservationDate.checkOutDate);
   const { values} = useSelector((state) => state.roomData);
   const supplement = useSelector(state => state.reservation.supplement);
-  const total = useSelector(state => state.reservation.total);
+  const theTotal = useSelector(state => state.reservation.theTotal);
+// useEffect(()=>{console.log('hotel pricecs the total',theTotal)},[theTotal])
 
   const dispatch = useDispatch(); 
 
-  useEffect(() => {
-    hotels?.forEach((e) => {
-      handleRoomsPrice(e.prices, supplement);
-    });
-  }, [hotels, supplement,numberDays,roomData]);
-
-  function findObjectByType(arr, type) {
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i].type === type) {
-            return arr[i].price;
-        }
-    }
-    return null; // Return null if no match is found
-}
-
-  const handleRoomsPrice = (arr,supp) => {
-    let roomsPrice = {};
-    let total=0
-    for (let i = 0; i < roomData.length; i++) {
-      const roomNumber = `room${i + 1}`;
-
-      if (roomData[i].nAdult === 1&&supp==='logementSimple') {
-        roomsPrice[roomNumber] = findObjectByType(arr,'supplementSingle')+findObjectByType(arr,'logementSimple')
-      } else if (roomData[i].nAdult > 1 &&supp==='logementSimple') {
-        roomsPrice[roomNumber] = findObjectByType(arr,'logementSimple') *2;
-      }
-      if (roomData[i].nAdult === 1&&supp==="petitDej") {
-        roomsPrice[roomNumber] = arr[4].price+arr[1].price
-      } else if (roomData[i].nAdult > 1 &&supp==="petitDej") {
-        roomsPrice[roomNumber] = arr[1].price *2;
-      }
-      if (roomData[i].nAdult === 1&&supp==="supplémentVueSurMer") {
-        roomsPrice[roomNumber] = arr[4].price+arr[2].price
-      } else if (roomData[i].nAdult > 1 &&supp==="supplémentVueSurMer") {
-        roomsPrice[roomNumber] = arr[2].price *2;
-      }
-      if (roomData[i].nAdult === 1&&supp==="demiePension") {
-        roomsPrice[roomNumber] = arr[4].price+arr[3].price
-      } else if (roomData[i].nAdult > 1 &&supp==="demiePension") {
-        roomsPrice[roomNumber] = arr[3].price *2;
-      }
-      if (roomData[i].nAdult === 1&&supp==="demiePension") {
-        roomsPrice[roomNumber] = arr[4].price+arr[3].price
-      } else if (roomData[i].nAdult > 1 &&supp==="demiePension") {
-        roomsPrice[roomNumber] = arr[3].price *2;
-      }
-      if (roomData[i].nAdult === 1&&supp==="pensionComplete") {
-        roomsPrice[roomNumber] = arr[4].price+arr[5].price
-      } else if (roomData[i].nAdult > 1 &&supp==="pensionComplete") {
-        roomsPrice[roomNumber] = arr[5].price *2;
-      }
-      if (roomData[i].nAdult === 1&&supp==="allInSoft") {
-        roomsPrice[roomNumber] = arr[4].price+arr[6].price
-      } else if (roomData[i].nAdult > 1 &&supp==="allInSoft") {
-        roomsPrice[roomNumber] = arr[6].price *2;
-      }
-      if (roomData[i].nAdult === 1&&supp==="allIn") {
-        roomsPrice[roomNumber] = arr[4].price+arr[7].price
-      } else if (roomData[i].nAdult > 1 &&supp==="allIn") {
-        roomsPrice[roomNumber] = arr[7].price *2;
-      }
-      if (roomData[i].nAdult === 1&&supp==="supplementSuite") {
-        roomsPrice[roomNumber] = arr[4].price+arr[8].price
-      } else if (roomData[i].nAdult > 1 &&supp==="supplémentSuite") {
-        roomsPrice[roomNumber] = arr[8].price *2;
-      }
-    }
+  const totalAmount = useSelector((state) => state.reservation.totalAmount);
   
-    console.log("This is the number of adults:", roomData[0].nAdult === 1);
-    console.log("Rooms price:", roomsPrice);
-    console.log("Room data:", roomData);
-    dispatch(getRoomData(roomData));
-    dispatch(getRoomPrices(roomData));
-    for(let key in roomsPrice ){
-      total +=roomsPrice[key]
-    }
-    console.log('this is the total',total * numberDays)
-    dispatch(setTotal(total*numberDays ))
-    return total * numberDays
-  };
 
   return (
     <>
-      {hotels?.map((e) => (
+      {hotels?.map((e,index) => (
         <Box
           key={e.id}
           sx={{
@@ -118,8 +44,8 @@ function HotelsPrices({
             overflow: { xs: "auto", sm: "initial" },
           }}
         >
-          <button onClick={() => handleRoomsPrice(e.prices)}>Rooms</button>
-          <button onClick={() => console.log(values)}>Rooms12</button>
+          {/* <button onClick={() => handleRoomsPrice(e.prices)}>Rooms</button> */}
+          <button onClick={() => console.log(e.prices)}>Rooms12</button>
           {/* <button onClick={()=>console.log(e.prices)}>prices</button> */}
           {/* <span>the id of the price of supplémentSingle est {getIdOfPiceByType(e.price,'supplémentSingle')}</span> */}
           <Card
@@ -153,7 +79,7 @@ function HotelsPrices({
                 {supplement}
               </Typography>
               <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
-                {total}
+                the tot {handleRoomsPrice(e.prices, supplement,roomData,e.periods,checkInDate,checkOutDate)}
               </Typography>
               <Sheet
                 sx={{
@@ -179,12 +105,13 @@ function HotelsPrices({
                 <Button
                   variant="solid"
                   color="primary"
-                  onClick={() => console.log(e.prices)}
+                  onClick={() => {dispatch(setTotalAmount(handleRoomsPrice(e.prices, supplement,roomData,e.periods,checkInDate,checkOutDate)))
+                    dispatch(selectOneHotel(hotels[index]))
+                  console.log('thsi si sthe hotel id',hotels[index])
+                }}
                 >  <NavLink to="/validReservation">
-                  
                   Reservez
                 </NavLink>
-                  
                 </Button>
               </Box>
             </CardContent>

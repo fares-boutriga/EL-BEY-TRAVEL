@@ -29,7 +29,6 @@ export default function MyHotels() {
       .get("http://127.0.0.1:5000/app/hotel/getHotels")
       .then((result) => {
         setHotels(result.data);
-        console.log(result.data);
       })
       .catch((err) => {
         console.log(err);
@@ -88,7 +87,7 @@ export default function MyHotels() {
                 fontWeight="lg"
                 textColor="text.tertiary"
               >
-                Senior Journalist
+                {e.location}
               </Typography>
               <Sheet
                 sx={{

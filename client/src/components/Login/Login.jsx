@@ -47,13 +47,10 @@ export default function Login() {
       });
   
       if (result.status === 200) {
-        console.log(result.status);
         navigate('/');
       } else if (result.status === 404) {
-        console.log(result.status);
         alert("Access Denied");
       } else {
-        console.log(result.status);
         alert('Something went wrong');
       }
     } catch (error) {

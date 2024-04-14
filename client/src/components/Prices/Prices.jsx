@@ -9,15 +9,17 @@ import { useParams } from "react-router-dom";
 import PriceOnePer from './PriceOnePer';
 import axios from 'axios';
 import NoilPrice from '../NoilPrice/NoilPrice';
+import { useSelector } from 'react-redux';
 
 // const steps = ['Select campaign settings', 'Create an ad group', 'Create an ad'];
 
 export default function Prices({hotelId}) {
+  const peroidIds=useSelector((state=>state.periods.peroidIds))
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState({});
   const [prices,setPrices]=useState('')
   const [reload,serReload]=useState(false)
-  const [periodId,setPeriodID]=useState(1)
+  const [periodId,setPeriodID]=useState(peroidIds[0])
   const { NPeriode } = useParams();
   const generateSteps=()=>{
     const result=[]
@@ -26,6 +28,7 @@ export default function Prices({hotelId}) {
     }
     return result
 }
+
 const steps=generateSteps()
   const totalSteps = () => {
     return steps.length;
