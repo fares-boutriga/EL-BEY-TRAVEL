@@ -2,6 +2,7 @@ const {DataTypes}=require('sequelize')
 const sequelize =require('../configdb');
 const Admin = require('./Admin');
 const Chambres = require('./Chambres');
+const Hotels = require('./Hotels');
 
 const Reservation = sequelize.define('reservation', {
     referance: {
@@ -16,7 +17,7 @@ const Reservation = sequelize.define('reservation', {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    hotel: {
+    hotelName: {
       type: DataTypes.STRING(255),
       allowNull: true,
     },
@@ -56,9 +57,21 @@ const Reservation = sequelize.define('reservation', {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    observation: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
+    deleteState: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue:false
+    },
   });
 
   Reservation.hasMany(Chambres);
+  Reservation.hasMany(Hotels);
   Chambres.belongsTo(Reservation);
+  // Hotels.belongsTo(Reservation);
+  Reservation.belongsTo(Hotels,{foreignKey:'hoteId'})
   module.exports=Reservation
   

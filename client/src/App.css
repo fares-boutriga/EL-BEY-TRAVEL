@@ -1,7 +1,7 @@
 body {
     font-family: sans-serif;
     margin: 0;
-    padding: 0;
+    /* padding: 20px 20px 20px 20px; */
   }
   
   .voucher {
@@ -63,6 +63,15 @@ body {
     text-align: center;
     margin-top: 20px;
   }
+  .observation{
+    border: 2px solid ;
+    padding: 0px 20px 0px 20px;
+    margin-top: 30px;
+  }
+  #baby{
+    margin-top: 15px;
+    color: #0e7cf4;
   
+  }
   /* Add more styles as needed */
   

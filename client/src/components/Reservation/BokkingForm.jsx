@@ -67,7 +67,7 @@ function BookingForm() {
                   <TableCell>
                     {room.kidsAge?.length > 0 ? (
                       room.kidsAge.map((age, i) => (
-                        <span key={i}>{`${age[0]} ans`}</span>
+                        <span key={i}>{`${age} ans`} {i < room.kidsAge.length - 1 && <br />}</span>
                       ))
                     ) : (
                       <span>-- aucun enfants  --</span>

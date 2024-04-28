@@ -96,7 +96,7 @@ export default function Print() {
                   <td>
                     {room.kidsAge?.length > 0 ? (
                       room.kidsAge.map((age, i) => (
-                        <span key={i}>{`${age[0]} ans`}</span>
+                        <span key={i}>{`${age} ans`} {i < room.kidsAge.length - 1 && <br />}</span>
                       ))
                     ) : (
                       <span>-- aucun enfants  --</span>
@@ -104,13 +104,18 @@ export default function Print() {
                   </td>
                 </tr>
               ))}
+              {roomData[0].baby&&<p id="baby">Remarque: La réservation contai un bébé</p>}
                 </tbody>
               </table>
             </div>
-            {/* <div class="voucher-footer">
+            <div className="observation">
+              <h4 id="h4">Observation</h4>
+              <p>this is the observation about the resrvation</p>
+            </div>
+            <div class="voucher-footer">
       <p>[Hotel Signature Line]</p>
       <p>[Guest Signature Line]</p>
-    </div> */}
+    </div>
           </div>
         </main>
       </div>
