@@ -55,7 +55,24 @@ const Reservation = sequelize.define('reservation', {
     },
     cotisationHotel: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
+    },
+    hotelPayer: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue:false
+    },
+    modePaymentHotel: { //check ou éspace
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    checkNumber: { 
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    dateReglementHotel: { 
+      type: DataTypes.DATE,
+      allowNull: true
     },
     observation: {
       type: DataTypes.STRING(500),
@@ -72,6 +89,6 @@ const Reservation = sequelize.define('reservation', {
   Reservation.hasMany(Hotels);
   Chambres.belongsTo(Reservation);
   // Hotels.belongsTo(Reservation);
-  Reservation.belongsTo(Hotels,{foreignKey:'hoteId'})
+  Reservation.belongsTo(Hotels,{foreignKey:'hotelId'})
   module.exports=Reservation
   

@@ -4,6 +4,7 @@ const Periods = require('../Database/Models/Periods');
 const { Op } = require('sequelize');
 const Promotion = require('../Database/Models/Promotion');
 const NoilPrice = require('../Database/Models/NoilPrice');
+const RoomPromtonts = require('../Database/Models/RoomPromtonts');
 
 const getPeriodForDate = async (date) => {
   try {
@@ -65,6 +66,12 @@ module.exports = {
             {
               model: NoilPrice,
             },
+            {
+              model: RoomPromtonts,
+            },
+            // {
+            //   model: RoomPromtonts,
+            // },
           ],
         });
 

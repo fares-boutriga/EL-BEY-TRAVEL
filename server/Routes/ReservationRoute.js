@@ -1,6 +1,8 @@
 const reouter=require('express').Router()
-const{createResservation}=require('../Controllers/ReservationControler')
+const{createReservation, getReservations, payReservation}=require('../Controllers/ReservationControler')
 
-reouter.post('/add/:adminId',createResservation)
+reouter.post('/add/:adminId',createReservation)
+reouter.get('/all',getReservations)
+reouter.put('/pay/:reservationId',payReservation)
 
 module.exports=reouter

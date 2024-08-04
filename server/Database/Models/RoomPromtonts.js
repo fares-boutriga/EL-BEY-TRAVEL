@@ -1,20 +1,36 @@
 const { DataTypes } = require('sequelize');
 const sequelize =require('../configdb');
 
-const Reservation = require('./Reservation');
+const Hotels = require('./Hotels');
 
 const RoomPromtonts = sequelize.define('RoomPromtonts', {
-    beby: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    TherdBadAduls: {
-      type: DataTypes.STRING,
+    baby: {
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
+    towKisTowAdult: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    towKisOneAdult: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    maxThreeKids: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    theardBad: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    promotionTypePrtcentage: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue:false
+    }
   })
 //   RoomPromtonts.hasMany(Reservation);
-//   Reservation.belongsTo(RoomPromtonts);
-
+RoomPromtonts.belongsTo(Hotels,{foreignKey:'hotelId'});
+Hotels.hasMany(RoomPromtonts);
   module.exports=RoomPromtonts

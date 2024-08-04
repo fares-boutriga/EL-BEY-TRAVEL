@@ -45,7 +45,7 @@ module.exports = {
         if (isPasswordMatched) {
           // Generate a JWT token
           const token = sign({ userId: result.id, username: result.username }, process.env.JWT_SECRET, {
-            expiresIn: '1h' // Set the token expiration time as needed
+            expiresIn: '1m' // Set the token expiration time as needed
           });
 
           res.json({ success: true, message: 'Login successful', token });

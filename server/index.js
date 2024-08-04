@@ -10,6 +10,7 @@ const PricesRoutes=require('./Routes/PricesRoute')
 const NoilRoutes=require('./Routes/NoilRoute')
 const PromotionRoutes=require('./Routes/PromotionRoute')
 const ReservationRoutes=require('./Routes/ReservationRoute')
+const RoomPrormoRoutes=require('./Routes/RoomPromoRoutes')
 const app =express()
 app.use(express.json())
 app.use(
@@ -29,6 +30,7 @@ app.use('/app/price',PricesRoutes)
 app.use('/app/noil',NoilRoutes)
 app.use('/app/promotion',PromotionRoutes)
 app.use('/app/reservation',ReservationRoutes)
+app.use('/app/roomPromo',RoomPrormoRoutes)
 
 
 sequelize.sync() // You may use { force: true } to drop and recreate tables
