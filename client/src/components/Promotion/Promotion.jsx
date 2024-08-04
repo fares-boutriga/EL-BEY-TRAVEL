@@ -9,36 +9,54 @@ import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Button } from "@mui/material";
 import axios from "axios";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
-const Promotion = ({hotelID}) => {
+const MySwal = withReactContent(Swal);
+
+const Promotion = ({ hotelID,handleClose }) => {
   const [promotionType, setPromotionType] = useState(false);
-  const [startDate,setStartDate]=useState('')
-  const [endDate,setEndDate]=useState('')
-  const [promotion,setPromotion]=useState('')
-  const [type,setType]=useState('')
-  useEffect(()=>{
-    promotionType? setType('amount'):setType('percentage')
-  }
-  ,[promotionType])
-  const postNewPromotion=()=>{
-    axios.post('http://127.0.0.1:5000/app/promotion/createPromotion',{
-      start_date: startDate,
-      end_date: endDate,
-      percentage:promotion,
-      amount:promotion,
-      type:type,
-      hotelId:hotelID
-    })
-    .then(result=>{
-      console.log(result.data)
-    })
-    .catch(err=>{
-      console.log(err)
-    })
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [promotion, setPromotion] = useState("");
+  const [type, setType] = useState("");
 
-  }
-  const handleChange = (event) => {
-    setPromotionType(event.target.checked);
+  useEffect(() => {
+    setType(promotionType ? "amount" : "percentage");
+  }, [promotionType]);
+
+  const postNewPromotion = () => {
+    axios
+      .post("http://127.0.0.1:5000/app/promotion/createPromotion", {
+        start_date: startDate,
+        end_date: endDate,
+        percentage: promotionType ? 0 : promotion,
+        amount: promotionType ? promotion : 0,
+        type: type,
+        hotelId: hotelID,
+      })
+      .then((result) => {
+        MySwal.fire({
+          icon: "success",
+          title: "Promotion ajoutée",
+          text: "La promotion a été ajoutée avec succès !",
+          customClass: {
+            container: 'swal-container'
+          } 
+        });
+        handleClose()
+      })
+      .catch((err) => {
+        MySwal.fire({
+          icon: "error",
+          title: "Erreur",
+          text: "Une erreur s'est produite lors de l'ajout de la promotion.",
+          customClass: {
+            container: 'swal-container'
+          }
+        });
+        handleClose()
+      });
   };
 
   return (
@@ -47,7 +65,7 @@ const Promotion = ({hotelID}) => {
         control={
           <Switch
             checked={promotionType}
-            onChange={()=>{setPromotionType(!promotionType)}}
+            onChange={() => setPromotionType(!promotionType)}
             inputProps={{ "aria-label": "controlled" }}
           />
         }
@@ -59,23 +77,19 @@ const Promotion = ({hotelID}) => {
             id="start-date"
             label="Start Date"
             type="date"
-            InputLabelProps={{
-              shrink: true,
-            }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
             margin="normal"
-            onChange={(e)=>{setStartDate(e.target.value)}}
+            onChange={(e) => setStartDate(e.target.value)}
           />
           <TextField
             id="end-date"
             label="End Date"
             type="date"
-            InputLabelProps={{
-              shrink: true,
-            }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
             margin="normal"
-            onChange={(e)=>{setEndDate(e.target.value)}}
+            onChange={(e) => setEndDate(e.target.value)}
           />
           {!promotionType ? (
             <TextField
@@ -92,7 +106,7 @@ const Promotion = ({hotelID}) => {
               }}
               fullWidth
               margin="normal"
-              onChange={(e)=>{setPromotion(e.target.value)}}
+              onChange={(e) => setPromotion(e.target.value)}
               value={promotion}
             />
           ) : (
@@ -110,7 +124,7 @@ const Promotion = ({hotelID}) => {
               }}
               fullWidth
               margin="normal"
-              onChange={(e)=>{setPromotion(e.target.value)}}
+              onChange={(e) => setPromotion(e.target.value)}
               value={promotion}
             />
           )}

@@ -67,9 +67,7 @@
 	align-content: center;
 	justify-content: center;
 }
-.page div {
-	  margin-right: 30px;
-	}
+
   #ter{
     display: flex;
     margin: 0px 0px 50px 50px;

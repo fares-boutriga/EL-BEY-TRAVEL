@@ -1,13 +1,20 @@
-import React, { useState, useRef } from "react";
-import {Button,TextField,FormControl,FormLabel,Select,MenuItem,IconButton} from "@mui/material";
+import React, { useState, useRef, useEffect } from "react";
+import {Button,TextField,FormControl,FormLabel,Select,MenuItem,IconButton, Grid} from "@mui/material";
 import { ErrorOutlineOutlined as ErrorIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setClientForm } from "../../features/clientSlices";
 
 function ClientForm() {
+  const totalAmount = useSelector((state) => state.reservation.totalAmount);
+
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [observation, setObservation] = useState("");
   const [countryCode, setCountryCode] = useState("");
+  const [payer, setPayer] = useState("");
+  const [rest, setRest] = useState(totalAmount);
+  const dispatch=useDispatch()
   const nameError = useRef(false);
   const numberError = useRef(false);
   const navigate = useNavigate();
@@ -16,7 +23,6 @@ function ClientForm() {
     { value: "+213", label: "Algérie (+213)" },
     { value: "+218", label: "Libye (+218)" },
   ];
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     switch (name) {
@@ -32,13 +38,19 @@ function ClientForm() {
       case "countryCode":
         setCountryCode(value);
         break;
+      case "payer":
+        setPayer(value);
+        setRest(totalAmount - value); // Update rest based on new payer value
+        break;
       default:
         break;
     }
   };
+  
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    
     if (!nameError.current && !numberError.current) {
       console.log("Nom du client:", name);
       console.log("Numéro de téléphone:", number);
@@ -80,6 +92,33 @@ function ClientForm() {
           }}
           required
         />
+      </FormControl>
+      <FormControl fullWidth margin="normal">
+        <FormLabel htmlFor="name">floss</FormLabel>
+        <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+            <TextField
+          id="payer"
+          name="payer"
+          label='Payer'
+          value={payer}
+          onChange={handleChange}
+          required
+          fullWidth
+        />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+            <TextField
+          id="rest"
+          name="rest"
+          label='Rest a payer'
+          value={rest}
+          onChange={handleChange}
+          InputProps={{readOnly:true}}
+          fullWidth
+        />
+            </Grid>
+            </Grid>
       </FormControl>
 
       <FormControl fullWidth margin="normal" error={numberError.current}>
@@ -129,6 +168,7 @@ function ClientForm() {
         color="primary"
         onClick={() => {
           navigate("/print");
+          dispatch(setClientForm({name,number,observation,payer,rest}))
         }}
       >
         Soumettre

@@ -18,7 +18,7 @@ function HotelsPrices({
   // checkInDate,
   // checkOutDate,
   // numberDays,
-  roomData,
+  // roomData,
   hotels,
 }) {
   const checkInDate = useSelector((state) => state.reservation.reservationDate.checkInDate);
@@ -37,13 +37,14 @@ function HotelsPrices({
     <>
       {hotels?.map((e,index) => (
         <Box
-          key={e.id}
-          sx={{
-            width: "100%",
-            position: "relative",
-            overflow: { xs: "auto", sm: "initial" },
-          }}
+        key={e.id}
+        sx={{
+          width: "100%",
+          position: "relative",
+          overflow: { xs: "auto", sm: "initial" },
+        }}
         >
+        <button onClick={()=>console.log(e)}>ggg</button>
           {/* <button onClick={() => handleRoomsPrice(e.prices)}>Rooms</button> */}
           <button onClick={() => console.log(e.prices)}>Rooms12</button>
           {/* <button onClick={()=>console.log(e.prices)}>prices</button> */}
@@ -79,7 +80,7 @@ function HotelsPrices({
                 {supplement}
               </Typography>
               <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
-                the tot {handleRoomsPrice(e.prices, supplement,roomData,e.periods,checkInDate,checkOutDate)}
+                the tot {handleRoomsPrice(e.prices, supplement,values,e.periods,checkInDate,checkOutDate,e.RoomPromtonts)}
               </Typography>
               <Sheet
                 sx={{
@@ -105,7 +106,7 @@ function HotelsPrices({
                 <Button
                   variant="solid"
                   color="primary"
-                  onClick={() => {dispatch(setTotalAmount(handleRoomsPrice(e.prices, supplement,roomData,e.periods,checkInDate,checkOutDate)))
+                  onClick={() => {dispatch(setTotalAmount(handleRoomsPrice(e.prices, supplement,values,e.periods,checkInDate,checkOutDate,e.RoomPromtonts)))
                     dispatch(selectOneHotel(hotels[index]))
                   console.log('thsi si sthe hotel id',hotels[index])
                 }}

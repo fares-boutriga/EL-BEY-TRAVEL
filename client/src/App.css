@@ -1,9 +1,12 @@
 body {
     font-family: sans-serif;
     margin: 0;
-    /* padding: 20px 20px 20px 20px; */
+    
   }
-  
+  .nav{
+    padding: 0px !important ;
+  }
+
   .voucher {
     width: 900px; /* Adjust width as needed */
     margin: 50px auto;

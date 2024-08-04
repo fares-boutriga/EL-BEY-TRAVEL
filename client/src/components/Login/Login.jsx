@@ -1,53 +1,64 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Linke from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios'
-import {useNavigate,Link} from 'react-router-dom'
+import axios from 'axios';
+import Cookies from 'js-cookie'; // Import js-cookie library
+import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-// function Copyright(props) {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
-
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
 export default function Login() {
-  const [username,setUsername]=useState("")
-  const [password,setPassword]=useState("")
-  const navigate=useNavigate()
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate();
   // axios.defaults.withCredentials=true
-  const handleSubmit = async () => {
+
+  useEffect(() => {
+    // Check if the user previously chose to be remembered
+    const rememberedUsername = localStorage.getItem('rememberedUsername');
+    const rememberedPassword = localStorage.getItem('rememberedPassword');
+
+    if (rememberedUsername && rememberedPassword) {
+      setUsername(rememberedUsername);
+      setPassword(rememberedPassword);
+      setRememberMe(true);
+    }
+  }, []);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
       const result = await axios.post('http://localhost:5000/app/admin/login', {
         username: username,
         password: password,
       });
-  
+
       if (result.status === 200) {
         navigate('/');
+        Cookies.set('token', result.data.token, { expires: 1 });
+        console.log('Token set to cookie:', result.data.token); // Log the token
+
+        // Handle "Remember me" functionality
+        if (rememberMe) {
+          localStorage.setItem('rememberedUsername', username);
+          localStorage.setItem('rememberedPassword', password);
+        } else {
+          localStorage.removeItem('rememberedUsername');
+          localStorage.removeItem('rememberedPassword');
+        }
       } else if (result.status === 404) {
         alert("Access Denied");
       } else {
@@ -55,7 +66,11 @@ export default function Login() {
       }
     } catch (error) {
       if (error.response) {
-        alert(error.response.data.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+        });
         console.error('Error:', error.response.data.message);
       } else {
         alert('An unexpected error occurred');
@@ -63,7 +78,7 @@ export default function Login() {
       }
     }
   };
-  
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -93,7 +108,7 @@ export default function Login() {
               autoComplete="email"
               autoFocus
               value={username}
-              onChange={e=>{setUsername(e.target.value)}}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -105,39 +120,29 @@ export default function Login() {
               id="password"
               autoComplete="current-password"
               value={password}
-              onChange={e=>{setPassword(e.target.value)}}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={
+                <Checkbox
+                  value="remember"
+                  color="primary"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
+              }
               label="Remember me"
             />
             <Button
-              // type="submit"
-              onClick={handleSubmit}
+              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Linke href="#" variant="body2">
-                  Forgot password?
-                </Linke>
-              </Grid>
-              <Grid item>
-                <Link to={'/signUp'}>
-                <Linke  variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Linke>
-                </Link>
-                
-              </Grid>
-            </Grid>
           </Box>
         </Box>
-        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
     </ThemeProvider>
   );

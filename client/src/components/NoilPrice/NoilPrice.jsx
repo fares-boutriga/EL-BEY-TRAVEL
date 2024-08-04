@@ -6,11 +6,11 @@ import PercentIcon from "@mui/icons-material/Percent";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import axios from "axios";
 import {useEffect, useState } from "react";
 
-const NoilPrice = ({hotelId}) => {
+const NoilPrice = ({hotelId,setFinishNoilPrices}) => {
   const [noil,setNoil]=useState('')
   const [saintSylvester,setSaintSylvester]=useState('')
 
@@ -21,6 +21,7 @@ const NoilPrice = ({hotelId}) => {
       saintSylvester:saintSylvester
     }).then(result=>{
       alert('ajouter avec sucssi')
+      setFinishNoilPrices(true)
     })
     .catch(err=>{
       alert('err')
@@ -32,6 +33,9 @@ useEffect(()=>{console.log(hotelId)})
   return (
     <Card>
       <CardContent>
+      <Typography variant="h6" gutterBottom>
+      Noile et Saint Sylvester
+    </Typography>
         <form onSubmit={postPrices}>
           <TextField
             id="noil"

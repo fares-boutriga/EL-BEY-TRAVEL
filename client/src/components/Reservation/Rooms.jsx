@@ -15,7 +15,7 @@ function Rooms({ roomNumber, setRoomDataForRoom }) {
   const [kidsAge, setKidsAge] = useState([]);
   const [baby,setBaby]=useState(false)
   const dispatch=useDispatch()
-  dispatch(getRoomData([{ nAdult, nKids,baby, kidsAge }]))
+  // dispatch(getRoomData([{ nAdult, nKids,baby, kidsAge,baby }]))
   const generateKidsAgeInput = () => {
     if (nKids === 0) return null;
 
@@ -42,7 +42,7 @@ function Rooms({ roomNumber, setRoomDataForRoom }) {
   };
   useEffect(() => {
     updateRoomData();
-  }, [nAdult]);
+  }, [nAdult,nKids,kidsAge,]);
   const updateRoomData = () => {
     const roomData = {
       nAdult,

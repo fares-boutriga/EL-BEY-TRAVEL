@@ -23,11 +23,11 @@ export default function UpdateReservation() {
   const reservation = useSelector((state) => state.reservation);
   const totalAmount = useSelector((state) => state.reservation.totalAmount);
   const daysNumber = useSelector((state) => state.reservation.daysNumber);
-  const theHotel=    useSelector((state) =>state.hotelPrices.theHotel)
+  const theHotel=    useSelector((state) =>state.hotel.theHotel)
   const checkInDate = useSelector((state) => state.reservation.reservationDate.checkInDate);
   const checkOutDate = useSelector((state) => state.reservation.reservationDate.checkOutDate);
   useEffect(() => {
-    dispatch(setTotalAmount(handleRoomsPrice(theHotel[0].prices, supplement,roomData,theHotel[0].periods,checkInDate,checkOutDate)))
+    dispatch(setTotalAmount(handleRoomsPrice(theHotel.prices, supplement,roomData,theHotel.periods,checkInDate,checkOutDate,theHotel.RoomPromtonts)))
      
   }, [theHotel, supplement,daysNumber,roomData]);
 
@@ -92,7 +92,7 @@ export default function UpdateReservation() {
     <Typography variant="h6" gutterBottom>
       Reservation Information
     </Typography>
-    <Typography variant="body1">Total: {handleRoomsPrice(theHotel[0].prices, supplement,roomData,theHotel[0].periods,checkInDate,checkOutDate)}</Typography>
+    <Typography variant="body1">Total: {handleRoomsPrice(theHotel.prices, supplement,roomData,theHotel.periods,checkInDate,checkOutDate,theHotel.RoomPromtonts)}</Typography>
     {/* <Typography variant="body1">Supplement: {reservation.supplement}</Typography> */}
     {/* Add more reservation details here as needed */}
       <BookingForm/>

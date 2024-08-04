@@ -7,9 +7,7 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import SearchIcon from '@mui/icons-material/Search';
@@ -17,18 +15,30 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSearchInput } from '../../features/filterSlices';
+import Cookies from 'js-cookie';
+import { setAuth } from '../../features/authSlices';
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [pages, setPages] = React.useState([
-    { page: 'Reservations', link: '/HotelDetails' },
+    { page: 'Reservations', link: '/addReservaion' },
     { page: 'Mes Hotels', link: '/myHotels' },
     { page: 'Ajouter un Hotel', link: '/' },
+    { page: 'Finance', link: '/m' },
   ]);
+  const userName = useSelector((state) => state.auth.name);
   const navigate = useNavigate();
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
+  const dispatch = useDispatch();
+
+  const handleSearchInput = (event) => {
+    if (location.pathname === '/m') {
+      dispatch(setSearchInput(event.target.value));
+    }
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -36,6 +46,12 @@ function Navbar() {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const handleLogout = () => {
+    Cookies.remove('token');
+    dispatch(setAuth({ name: '', token: '' }));
+    navigate('/login');
   };
 
   const Search = styled('div')(({ theme }) => ({
@@ -78,14 +94,6 @@ function Navbar() {
     alignItems: 'center',
     justifyContent: 'center',
   }));
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
 
   if (isLoginPage) {
     // Don't render the Navbar on the login page
@@ -144,14 +152,14 @@ function Navbar() {
               }}
             >
               {pages.map((e, i) => (
-                <MenuItem key={i} onClick={() => { handleCloseNavMenu(); navigate(e.link) }}>
+                <MenuItem key={i} onClick={() => { handleCloseNavMenu(); navigate(e.link); }}>
                   <Typography textAlign="center">{e.page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, index) => (
               <Button
                 key={index}
@@ -159,7 +167,7 @@ function Navbar() {
                   handleCloseNavMenu();
                   navigate(page.link);
                 }}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page.page}
               </Button>
@@ -172,27 +180,20 @@ function Navbar() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              onChange={handleSearchInput}
             />
           </Search>
           <Box
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
-              mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}>
-            <Typography
-              style={{ marginLeft: '10px' }}
-            >wellcom walid</Typography>
+              alignItems: 'center',
+            }}
+          >
+            <Typography sx={{ marginRight: '10px' }}>Welcome, {userName}</Typography>
+            <IconButton color="inherit" onClick={handleLogout}>
+              <LogoutIcon />
+            </IconButton>
           </Box>
-          <LogoutIcon />
         </Toolbar>
       </Container>
     </AppBar>

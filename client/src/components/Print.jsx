@@ -2,17 +2,34 @@ import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import "../App.css";
 import { useSelector } from "react-redux";
+import axios from "axios";
 export default function Print() {
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
-  const theHotel= useSelector((state) =>state.hotelPrices.theHotel)
+  const totalAmount = useSelector((state) => state.reservation.totalAmount);
+  const theHotel= useSelector((state) =>state.hotel.theHotel)
   const checkInDate = useSelector((state) => state.reservation.reservationDate.checkInDate);
   const checkOutDate = useSelector((state) => state.reservation.reservationDate.checkOutDate);
   const daysNumber = useSelector((state) => state.reservation.daysNumber);
   const supplement = useSelector((state) => state.reservation.supplement);
   const roomData = useSelector(state => state.roomData.values); 
+  const {name,number,observation, payer, rest} = useSelector(state => state.client); 
+  const addReservation = async () => {
+    try {
+      await axios.post(`http://127.0.0.1:5000/app/reservation/add/${1}`, {
+         client: name, teleClient: number, hotelName: theHotel.name, chekin: checkInDate, checkout: checkOutDate,
+        nombreJours: daysNumber, nombreChambres: roomData.length, total: totalAmount, payer: payer, reste: rest, cotisationHotel:200, observation, hotelId: theHotel.id
+      });
+      alert('done');
+    
+    } catch (error) {
+      alert('error');
+      console.log(error)
+    }
+  };
+  
   return (
     <>
     <button onClick={()=>{console.log(roomData)}} >test</button>
@@ -40,21 +57,25 @@ export default function Print() {
                   <tbody>
                     <tr>
                       <th>Hotel:</th>
-                      <td id="voucher-number">{theHotel[0].name}</td>{" "}
+                      <td id="voucher-number">{theHotel.name}</td>{" "}
                     </tr>
                     <tr>
                       <th>Adress:</th>
                       <td id="reservation-number">
-                        {theHotel[0].emailReception}{" "}<br/>{theHotel[0]?.emailReservation}
+                        {theHotel.emailReception}{" "}<br/>{theHotel?.emailReservation}
                       </td>{" "}
                     </tr>
                     <tr>
                       <th>Téléphone Hotel:</th>
-                      <td id="guest-name">{theHotel[0]?.phone}</td>
+                      <td id="guest-name">{theHotel?.phone}</td>
                     </tr>
                     <tr>
                       <th>Client:</th>
-                      <td id="check-in-date">nome de client</td>{" "}
+                      <td id="check-in-date">{name}</td>{" "}
+                    </tr>
+                    <tr>
+                      <th>Téléphone Client:</th>
+                      <td id="check-in-date">{number}</td>{" "}
                     </tr>
                     <tr>
                       <th>Date de reéservation:</th>
@@ -110,7 +131,7 @@ export default function Print() {
             </div>
             <div className="observation">
               <h4 id="h4">Observation</h4>
-              <p>this is the observation about the resrvation</p>
+              <p>{observation}</p>
             </div>
             <div class="voucher-footer">
       <p>[Hotel Signature Line]</p>
@@ -120,6 +141,7 @@ export default function Print() {
         </main>
       </div>
       <button onClick={handlePrint}>Imprime</button>
+      <button onClick={addReservation}>enregestrer</button>
     </>
   );
 }

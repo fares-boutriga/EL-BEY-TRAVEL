@@ -78,6 +78,7 @@ function BookingForm() {
             </TableBody>
           </Table>
         </TableContainer>
+          {roomData[0].baby&&<span style={{padding:'20px',fontSize:'16px',color:'red'}}>la reservation inclue un bébé</span>}
       </Paper>
     </Box>
   );

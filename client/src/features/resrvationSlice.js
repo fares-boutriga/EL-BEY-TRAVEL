@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const initialState = {
   value: {},
@@ -13,9 +15,7 @@ export const reservationSlice = createSlice({
   name: 'reservation',
   initialState,
   reducers: {
-    saveReservation: (state, action) => {
-      state.value = { ...action.payload };
-    },
+
     setTotal: (state, action) => {
       state.theTotal = action.payload;
     },
@@ -38,3 +38,6 @@ export const reservationSlice = createSlice({
 export const { saveReservation, setTotal, setSupplement,setTotalAmount,setDaysNumber,setReservatioinDate } = reservationSlice.actions;
 export const reservationReducer = reservationSlice.reducer;
 export default reservationReducer;
+
+
+

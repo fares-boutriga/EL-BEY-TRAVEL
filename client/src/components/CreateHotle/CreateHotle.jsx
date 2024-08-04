@@ -13,7 +13,7 @@ const CreateHotel = ({ setHotelId }) => {
   const [name, setName] = useState('');
   const [emailReception, setEmailReception] = useState('');
   const [emailReservation, setEmailReservation] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState(3);
   const [phone, setPhone] = useState("");
   const [responsible,setResponsible]=useState("")
   const [location,setLocation]=useState("")

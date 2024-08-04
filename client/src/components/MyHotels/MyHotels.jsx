@@ -10,20 +10,24 @@ import axios from "axios";
 import hotelImage from "../../assets/hotel.png";
 import {
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   Rating,
-  TextField,
+  IconButton
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import Promotion from "../Promotion/Promotion";
+
 export default function MyHotels() {
   const [hotels, setHotels] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [selectedHotelId, setSelectedHotelId] = useState(null);
 
   useEffect(() => {
     getHotels();
   }, []);
+
   const getHotels = () => {
     axios
       .get("http://127.0.0.1:5000/app/hotel/getHotels")
@@ -34,14 +38,15 @@ export default function MyHotels() {
         console.log(err);
       });
   };
-  const [open, setOpen] = useState(false);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (hotelId) => {
+    setSelectedHotelId(hotelId);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setSelectedHotelId(null);
   };
 
   return (
@@ -65,7 +70,6 @@ export default function MyHotels() {
                 minWidth:
                   "clamp(0px, (calc(var(--stack-point) - 2 * var(--Card-padding) - 2 * var(--variant-borderWidth, 0px)) + 1px - 100%) * 999, 100%)",
               },
-              // make the card resizable for demo
               overflow: "auto",
               resize: "horizontal",
             }}
@@ -113,7 +117,7 @@ export default function MyHotels() {
                 <Button
                   variant="outlined"
                   color="neutral"
-                  onClick={handleClickOpen}
+                  onClick={() => handleClickOpen(e.id)}
                 >
                   Ajouter un promo
                 </Button>
@@ -123,24 +127,33 @@ export default function MyHotels() {
               </Box>
             </CardContent>
           </Card>
-          <React.Fragment>
-            <Dialog open={open} onClose={handleClose}>
-              <DialogTitle>Ajouter un promo</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Vous pouvez ajouter une promotion pour chaque hôtel en
-                  sélectionnant simplement la date de début et la date de fin de
-                  la promotion, ainsi que le pourcentage de réduction que vous
-                  souhaitez offrir.
-                </DialogContentText>
-              </DialogContent>
-              <Promotion hotelID={e.id} />
-              <DialogActions>
-                <Button onClick={handleClose}>Annuler </Button>
-                <Button onClick={handleClose}>Ajouter</Button>
-              </DialogActions>
-            </Dialog>
-          </React.Fragment>
+
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>
+              Ajouter un promo
+              <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Vous pouvez ajouter une promotion pour chaque hôtel en
+                sélectionnant simplement la date de début et la date de fin de
+                la promotion, ainsi que le pourcentage de réduction que vous
+                souhaitez offrir.
+              </DialogContentText>
+              {selectedHotelId && <Promotion hotelID={selectedHotelId} handleClose={handleClose}/>}
+            </DialogContent>
+          </Dialog>
         </Box>
       ))}
     </>

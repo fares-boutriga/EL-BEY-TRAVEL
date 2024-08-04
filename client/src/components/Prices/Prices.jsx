@@ -10,6 +10,7 @@ import PriceOnePer from './PriceOnePer';
 import axios from 'axios';
 import NoilPrice from '../NoilPrice/NoilPrice';
 import { useSelector } from 'react-redux';
+import KidsReduction from '../KidsReduction/KidsReduction';
 
 // const steps = ['Select campaign settings', 'Create an ad group', 'Create an ad'];
 
@@ -20,6 +21,7 @@ export default function Prices({hotelId}) {
   const [prices,setPrices]=useState('')
   const [reload,serReload]=useState(false)
   const [periodId,setPeriodID]=useState(peroidIds[0])
+  const [finshNpoilPrices,setFinishNoilPrices]=useState(false)
   const { NPeriode } = useParams();
   const generateSteps=()=>{
     const result=[]
@@ -125,7 +127,8 @@ const steps=generateSteps()
             {/* <Typography sx={{ mt: 2, mb: 1 }}>
               All steps completed - you&apos;re finished
             </Typography> */}
-            <NoilPrice hotelId={hotelId}/>
+           {!finshNpoilPrices&& <NoilPrice hotelId={hotelId} setFinishNoilPrices={setFinishNoilPrices}/>}
+           {finshNpoilPrices&& <KidsReduction hotelID={hotelId}/>}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Box sx={{ flex: '1 1 auto' }} />
               <Button onClick={handleReset}>Reset</Button>
